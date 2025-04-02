@@ -49,7 +49,9 @@ Gardening & Sustainable Agriculture is a 🌿 Spring-based web application desig
 
              👀 Both users and admins can view challenges and achievements.
 
-             📊 Leaderboard System
+             Timeline
+
+             📊 Leaderboard System 
 
                  🏅 Track top-performing users based on completed challenges.
 
