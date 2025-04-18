@@ -15,6 +15,8 @@ const App = () => {
     <Router>
       <Routes>
 
+      {/* Main components */}
+
       <Route path="/" element={<Home />} /> {/*  Home as default route */}
      
 
@@ -37,6 +39,32 @@ const App = () => {
          <Route path="/add-challenge" element={<AddChallenge />} />
          <Route path="/all-challenge" element={<QuizManagement />} />
          <Route path="/update-challenge/:challengeId" element={<EditChallenge />} />
+
+
+
+
+         {/* Garden logs */}
+
+
+
+
+
+
+         {/* Community */}
+
+
+
+
+
+
+         {/* Tutorial */}
+
+
+
+
+
+
+
 
 
       </Routes>
