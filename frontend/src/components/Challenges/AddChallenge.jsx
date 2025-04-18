@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { Leaf, Plus, Trash2, CheckCircle } from "lucide-react";
 import { FaMedal, FaHeading, FaRegQuestionCircle, FaListUl, FaCheck } from "react-icons/fa";
+import Nav from "../MainComponents/Nav";
 
 const FloatingInput = ({
   label,
@@ -16,6 +17,7 @@ const FloatingInput = ({
   icon,
 }) => {
   return (
+    
     <div className="relative w-full mb-5">
       <div className="flex items-center border rounded-xl bg-opacity-40 backdrop-blur-md px-4 py-3 focus-within:ring-2 focus-within:ring-green-500 transition-all">
         {icon && <span className="mr-3 text-green-700">{icon}</span>}
@@ -147,6 +149,8 @@ const AddChallenge = () => {
   };
 
   return (
+    <>
+       <Nav/>
     <div className="min-h-screen flex flex-col sm:flex-row">
       {/* Left Side */}
       <motion.div
@@ -155,7 +159,7 @@ const AddChallenge = () => {
         className="w-full sm:w-[45%] h-screen bg-cover bg-center relative overflow-hidden"
         style={{ backgroundImage: "url('/back1.png')" }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#c7f5c7]/60 via-transparent to-transparent z-10" />
+        
         <motion.p
           className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-black text-lg italic font-medium z-20"
           animate={{ opacity: [0, 1, 0] }}
@@ -305,6 +309,7 @@ const AddChallenge = () => {
         </motion.div>
       </div>
     </div>
+    </>
   );
 };
 
