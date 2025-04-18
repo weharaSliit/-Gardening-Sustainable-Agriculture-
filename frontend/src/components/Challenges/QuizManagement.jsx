@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Pencil, Trash2, PlusCircle, Leaf, CheckCircle } from 'lucide-react';
+import Nav from '../MainComponents/Nav';
 
 
 const QuizManagement = () => {
@@ -37,7 +38,8 @@ const QuizManagement = () => {
   };
 
   return (
-    
+    <>
+           <Nav/>
     <div className="p-8 text-green-800 bg-[#f7fdf7] min-h-screen font-growFont relative">
       <div className="flex justify-between items-center mb-6">
         <div>
@@ -126,6 +128,7 @@ const QuizManagement = () => {
         </table>
       </div>
     </div>
+    </>
   );
 };
 

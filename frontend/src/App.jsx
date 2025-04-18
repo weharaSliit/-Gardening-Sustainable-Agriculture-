@@ -7,7 +7,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AddChallenge from './components/Challenges/AddChallenge';
 import QuizManagement from './components/Challenges/QuizManagement';
 import EditChallenge from './components/Challenges/EditChallenge';
-import Home from './components/Home/Home';
+import Home from './components/MainComponents/Home';
+import ChallengeHome from './components/Challenges/ChallengeHome';
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
         
 
          {/* Challenge */}
+         <Route path="/challenge-home" element={<ChallengeHome />} />
          <Route path="/add-challenge" element={<AddChallenge />} />
          <Route path="/all-challenge" element={<QuizManagement />} />
          <Route path="/update-challenge/:challengeId" element={<EditChallenge />} />

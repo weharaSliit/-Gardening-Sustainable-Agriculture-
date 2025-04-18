@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Leaf, PlusCircle, Trash2, Save, XCircle } from "lucide-react";
 import { FaMedal, FaHeading, FaRegQuestionCircle, FaListUl, FaCheck,FaRegStickyNote } from "react-icons/fa";
+import Nav from "../MainComponents/Nav";
 
 const EditChallenge = () => {
   const { challengeId } = useParams();
@@ -74,6 +75,8 @@ const EditChallenge = () => {
   };
 
   return (
+    <>
+     <Nav/>
     <div className="p-8 bg-[#f7fdf7] min-h-screen text-grow-leaf font-growFont">
       <div className="flex items-center gap-2 mb-6">
         <Leaf className="w-7 h-7 text-grow-green animate-pulse-soft" />
@@ -192,6 +195,7 @@ const EditChallenge = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
