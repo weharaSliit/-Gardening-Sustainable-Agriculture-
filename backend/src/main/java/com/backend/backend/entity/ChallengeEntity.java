@@ -14,6 +14,16 @@ public class ChallengeEntity {
     private String challengeDescription;
     private List<Question> questions;
     private String badgeAwarded;
+    private boolean isPosted = false;
+
+    public boolean isPosted() {
+        return isPosted;
+    }
+
+    public void setPosted(boolean posted) {
+        isPosted = posted;
+    }
+
 
     //  Inner static class with full structure
     public static class Question {
