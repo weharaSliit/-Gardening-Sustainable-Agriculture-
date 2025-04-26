@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Register from './components/Register';
-import LoginPage from './components/LoginPage';
-import ProfilePage from './components/ProfilePage';
+import Register from './components/User/Register';
+import LoginPage from './components/User/LoginPage';
+import ProfilePage from './components/User/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';   
 import Home from './components/MainComponents/Home';
 
@@ -11,6 +11,11 @@ import AddChallenge from './components/Challenges/AddChallenge';
 import QuizManagement from './components/Challenges/QuizManagement';
 import EditChallenge from './components/Challenges/EditChallenge';
 import ChallengeHome from './components/Challenges/ChallengeHome';
+import QuizStatusPage from './components/Challenges/QuizStatusPage';
+import TakeQuizPage from './components/Challenges/TakeQuizPage';
+import Leaderboard from './components/Challenges/Leaderboard';
+import AllPostedQuizzes from './components/Challenges/AllPostedQuizzes';
+import GardenCalendar from './components/GardenLogs/GardenCalendar';
 
 //tutorial
 import THome from './components/Tutorial/THome';
@@ -49,14 +54,25 @@ const App = () => {
          <Route path="/add-challenge" element={<AddChallenge />} />
          <Route path="/all-challenge" element={<QuizManagement />} />
          <Route path="/update-challenge/:challengeId" element={<EditChallenge />} />
+         <Route path="/quiz-status" element={<QuizStatusPage />} />
+
+
+         <Route path="/take-quiz/:id" element={<TakeQuizPage />} />
+        <Route path="/leaderboard/:id" element={<Leaderboard />} />
+        <Route path="/all-posted-quizzes" element={<AllPostedQuizzes />} />
 
 
 
 
          {/* Garden logs */}
-
-
-
+         <Route
+          path="/garden-calendar"
+          element={
+            <ProtectedRoute>
+              <GardenCalendar />
+            </ProtectedRoute>
+          }
+        />
 
 
 
