@@ -22,7 +22,7 @@ const Nav = () => {
                 <ul className="flex items-center space-x-8 font-medium text-white text-sm">
                     <li className="flex items-center space-x-1 hover:text-lime-200 transition">
                         <BookOpen className="w-4 h-4" />
-                        <a href="#tutorial">Tutorial</a>
+                        <a href="/thome">Tutorial</a>
                     </li>
                     <li className="flex items-center space-x-1 hover:text-lime-200 transition">
                         <Users className="w-4 h-4" />

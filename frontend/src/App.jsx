@@ -4,12 +4,26 @@ import Register from './components/User/Register';
 import LoginPage from './components/User/LoginPage';
 import ProfilePage from './components/User/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';   
+import Home from './components/MainComponents/Home';
+
+//challanges
 import AddChallenge from './components/Challenges/AddChallenge';
 import QuizManagement from './components/Challenges/QuizManagement';
 import EditChallenge from './components/Challenges/EditChallenge';
-import Home from './components/MainComponents/Home';
 import ChallengeHome from './components/Challenges/ChallengeHome';
+import QuizStatusPage from './components/Challenges/QuizStatusPage';
+import TakeQuizPage from './components/Challenges/TakeQuizPage';
+import Leaderboard from './components/Challenges/Leaderboard';
+import AllPostedQuizzes from './components/Challenges/AllPostedQuizzes';
 import GardenCalendar from './components/GardenLogs/GardenCalendar';
+
+//tutorial
+import THome from './components/Tutorial/THome';
+import AddTutorial from './components/Tutorial/AddTutorial';
+import DisplayTutorial from './components/Tutorial/DisplayTutorial';
+
+
+
 
 const App = () => {
   return (
@@ -40,6 +54,12 @@ const App = () => {
          <Route path="/add-challenge" element={<AddChallenge />} />
          <Route path="/all-challenge" element={<QuizManagement />} />
          <Route path="/update-challenge/:challengeId" element={<EditChallenge />} />
+         <Route path="/quiz-status" element={<QuizStatusPage />} />
+
+
+         <Route path="/take-quiz/:id" element={<TakeQuizPage />} />
+        <Route path="/leaderboard/:id" element={<Leaderboard />} />
+        <Route path="/all-posted-quizzes" element={<AllPostedQuizzes />} />
 
 
 
@@ -64,6 +84,12 @@ const App = () => {
 
 
          {/* Tutorial */}
+         <Route path="/thome" element={<THome />} />
+         <Route path="/addtutorial" element={<AddTutorial/>} />
+         <Route path="/alltutorial" element={<DisplayTutorial />} />
+          
+  
+          {/* 404 Not Found */}
 
 
 
