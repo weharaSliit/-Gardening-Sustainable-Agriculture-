@@ -4,11 +4,21 @@ import Register from './components/Register';
 import LoginPage from './components/LoginPage';
 import ProfilePage from './components/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';   
+import Home from './components/MainComponents/Home';
+
+//challanges
 import AddChallenge from './components/Challenges/AddChallenge';
 import QuizManagement from './components/Challenges/QuizManagement';
 import EditChallenge from './components/Challenges/EditChallenge';
-import Home from './components/MainComponents/Home';
 import ChallengeHome from './components/Challenges/ChallengeHome';
+
+//tutorial
+import THome from './components/Tutorial/THome';
+import AddTutorial from './components/Tutorial/AddTutorial';
+import DisplayTutorial from './components/Tutorial/DisplayTutorial';
+
+
+
 
 const App = () => {
   return (
@@ -58,6 +68,12 @@ const App = () => {
 
 
          {/* Tutorial */}
+         <Route path="/thome" element={<THome />} />
+         <Route path="/addtutorial" element={<AddTutorial/>} />
+         <Route path="/alltutorial" element={<DisplayTutorial />} />
+          
+  
+          {/* 404 Not Found */}
 
 
 
