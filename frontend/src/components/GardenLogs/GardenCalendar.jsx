@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Nav from "../MainComponents/Nav";
 import HarvestTimeline from "./HarvestTimeline"; // Import the timeline component
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const GardenCalendar = () => {
   const [calendarData, setCalendarData] = useState([]);
+  const [notifications, setNotifications] = useState([]); // State for notifications
+  const [showNotifications, setShowNotifications] = useState(false); // State to toggle notification section
   const [newEntry, setNewEntry] = useState({
     vegetable: "",
     sowDate: "",
@@ -19,8 +21,43 @@ const GardenCalendar = () => {
   const [editingEntry, setEditingEntry] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
   const [profile, setProfile] = useState(null); // State for profile data
+  const [profilePicture, setProfilePicture] = useState(null); // State for profile picture
   const [userId, setUserId] = useState("");
   const [error, setError] = useState("");
+
+  const markAsRead = (id) => {
+    setNotifications((prevNotifications) =>
+      prevNotifications.filter((notification) => notification.id !== id)
+    );
+  };
+
+  const handleProfilePictureUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profilePicture", file);
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `http://localhost:8080/api/v1/profile/upload-picture/${userId}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setProfilePicture(response.data.profilePictureUrl);
+      alert("Profile picture updated successfully!");
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+      setError("Failed to upload profile picture.");
+    }
+  };
 
   useEffect(() => {
     const fetchProfileAndCalendar = async () => {
@@ -36,13 +73,18 @@ const GardenCalendar = () => {
 
       try {
         // Fetch profile data
-        const profileResponse = await axios.get(`http://localhost:8080/api/v1/profile/${userIdFromToken}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const profileResponse = await axios.get(
+          `http://localhost:8080/api/v1/profile/${userIdFromToken}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setProfile(profileResponse.data);
 
         // Fetch calendar data
         fetchCalendarData(token, userIdFromToken);
+
+        fetchNotifications(token);
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Failed to fetch data");
@@ -54,13 +96,69 @@ const GardenCalendar = () => {
 
   const fetchCalendarData = async (token, userId) => {
     try {
-      const response = await axios.get("http://localhost:8080/api/v1/garden-calendar", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "http://localhost:8080/api/v1/garden-calendar",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setCalendarData(response.data);
     } catch (error) {
       console.error("Error fetching calendar data:", error);
     }
+  };
+
+  const getDateClass = (startDate, endDate) => {
+    const currentDate = new Date();
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (currentDate > end) {
+      return "bg-red-100 text-red-800"; // Overdue
+    } else if (currentDate < start) {
+      return "bg-yellow-100 text-yellow-800"; // Upcoming
+    } else {
+      return "bg-green-100 text-green-800"; // Current
+    }
+  };
+
+  const fetchNotifications = async (token) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/api/v1/garden-calendar",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const currentDate = new Date();
+      const nextDay = new Date(currentDate);
+      nextDay.setDate(currentDate.getDate() + 1);
+
+      const nextDayNotifications = response.data.filter((entry) => {
+        const harvestStartDate = new Date(entry.startDate);
+        return (
+          harvestStartDate.getFullYear() === nextDay.getFullYear() &&
+          harvestStartDate.getMonth() === nextDay.getMonth() &&
+          harvestStartDate.getDate() === nextDay.getDate()
+        );
+      });
+
+      const formattedNotifications = nextDayNotifications.map((entry) => ({
+        id: entry.id,
+        message: `Reminder: Harvest ${
+          entry.vegetable
+        } starts tomorrow (${new Date(entry.startDate).toLocaleDateString()})`,
+      }));
+
+      setNotifications(formattedNotifications);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+
+  const onNotificationClick = () => {
+    setShowNotifications(!showNotifications); // Toggle notification section
   };
 
   const handleInputChange = (e) => {
@@ -90,9 +188,13 @@ const GardenCalendar = () => {
         );
         setEditingEntry(null);
       } else {
-        await axios.post("http://localhost:8080/api/v1/garden-calendar", entryWithUserId, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.post(
+          "http://localhost:8080/api/v1/garden-calendar",
+          entryWithUserId,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
       }
       fetchCalendarData(token, userId); // Fetch updated calendar data
       setNewEntry({
@@ -115,10 +217,18 @@ const GardenCalendar = () => {
     setEditingEntry(entry);
     setNewEntry({
       vegetable: entry.vegetable,
-      sowDate: entry.sowDate ? new Date(entry.sowDate).toISOString().split("T")[0] : "",
-      plantDate: entry.plantDate ? new Date(entry.plantDate).toISOString().split("T")[0] : "",
-      startDate: entry.startDate ? new Date(entry.startDate).toISOString().split("T")[0] : "",
-      endDate: entry.endDate ? new Date(entry.endDate).toISOString().split("T")[0] : "",
+      sowDate: entry.sowDate
+        ? new Date(entry.sowDate).toISOString().split("T")[0]
+        : "",
+      plantDate: entry.plantDate
+        ? new Date(entry.plantDate).toISOString().split("T")[0]
+        : "",
+      startDate: entry.startDate
+        ? new Date(entry.startDate).toISOString().split("T")[0]
+        : "",
+      endDate: entry.endDate
+        ? new Date(entry.endDate).toISOString().split("T")[0]
+        : "",
       quantity: entry.quantity,
       quantityScale: entry.quantityScale || "kg",
       description: entry.description || "",
@@ -144,9 +254,50 @@ const GardenCalendar = () => {
   };
 
   return (
-    <div>
-      <Nav />
-      <div className="p-6 bg-green-50 min-h-screen">
+    <div className="relative">
+      {/* Navigation Bar as an Overlay */}
+      <div className="fixed top-0 left-0 w-full z-50">
+        <Nav
+          notifications={notifications}
+          onNotificationClick={onNotificationClick} // Pass the function as a prop
+        />
+      </div>
+
+      {/* Main Content */}
+      <div className="pt-20 p-6 bg-green-50 min-h-screen">
+        {/* Notifications Section */}
+        {showNotifications && notifications.length > 0 && (
+          <div className="mb-6 bg-white border border-gray-300 shadow-lg rounded-lg p-4">
+            <h2 className="font-bold text-lg text-gray-800 mb-4">
+              Notifications
+            </h2>
+            <ul className="space-y-2">
+              {notifications.map((notification) => (
+                <li
+                  key={notification.id}
+                  className="flex justify-between items-center bg-yellow-50 p-3 rounded-lg shadow-sm"
+                >
+                  <span className="text-gray-700">{notification.message}</span>
+                  <button
+                    onClick={() => markAsRead(notification.id)} // Mark as read
+                    className="text-blue-600 hover:underline ml-4"
+                  >
+                    Mark as Read
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <div className="text-center mt-4">
+              <button
+                onClick={() => setShowNotifications(false)} // Hide notification section
+                className="text-green-600 font-semibold hover:underline"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Profile Section */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-green-800 mb-4">Profile</h1>
@@ -157,13 +308,24 @@ const GardenCalendar = () => {
               <div className="flex flex-col items-center sm:items-start sm:w-1/3">
                 <div className="w-32 h-32 rounded-full bg-gray-300 mb-4 overflow-hidden shadow-md">
                   <img
-                    src="/profile-placeholder.png"
+                    src={profilePicture || "/profile-placeholder.png"} // Display the uploaded image or a placeholder
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h2 className="text-2xl font-bold text-green-800">{profile.name}</h2>
-                <p className="text-gray-600 text-sm">{profile.role || "User Role"}</p>
+                <h2 className="text-2xl font-bold text-green-800">
+                  {profile.name}
+                </h2>
+                <p className="text-gray-600 text-sm">
+                  {profile.role || "User Role"}
+                </p>
+                {/* File Input for Profile Picture */}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfilePictureUpload}
+                  className="mt-4"
+                />
               </div>
 
               {/* Profile Details */}
@@ -174,7 +336,7 @@ const GardenCalendar = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-700">
-                      <strong>User ID:</strong> {userId}
+                      <strong>User ID:</strong> {profile.id}
                     </p>
                   </div>
                   <div>
@@ -191,7 +353,9 @@ const GardenCalendar = () => {
         </div>
 
         {/* Garden Calendar Section */}
-        <h1 className="text-2xl font-bold text-green-800 mb-4">Garden Calendar</h1>
+        <h1 className="text-2xl font-bold text-green-800 mb-4">
+          Garden Calendar
+        </h1>
         <button
           onClick={() => {
             setEditingEntry(null);
@@ -227,9 +391,18 @@ const GardenCalendar = () => {
             {calendarData.map((entry) => (
               <tr key={entry.id} className="border-b">
                 <td className="p-4">{entry.vegetable}</td>
-                <td className="p-4">{new Date(entry.sowDate).toLocaleDateString()}</td>
-                <td className="p-4">{new Date(entry.plantDate).toLocaleDateString()}</td>
                 <td className="p-4">
+                  {new Date(entry.sowDate).toLocaleDateString()}
+                </td>
+                <td className="p-4">
+                  {new Date(entry.plantDate).toLocaleDateString()}
+                </td>
+                <td
+                  className={`p-4 ${getDateClass(
+                    entry.startDate,
+                    entry.endDate
+                  )}`}
+                >
                   {new Date(entry.startDate).toLocaleDateString()} -{" "}
                   {new Date(entry.endDate).toLocaleDateString()}
                 </td>
