@@ -1,14 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Register from './components/Register';
-import LoginPage from './components/LoginPage';
-import ProfilePage from './components/ProfilePage';
+import Register from './components/User/Register';
+import LoginPage from './components/User/LoginPage';
+import ProfilePage from './components/User/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';   
 import AddChallenge from './components/Challenges/AddChallenge';
 import QuizManagement from './components/Challenges/QuizManagement';
 import EditChallenge from './components/Challenges/EditChallenge';
 import Home from './components/MainComponents/Home';
 import ChallengeHome from './components/Challenges/ChallengeHome';
+import GardenCalendar from './components/GardenLogs/GardenCalendar';
 
 const App = () => {
   return (
@@ -44,9 +45,14 @@ const App = () => {
 
 
          {/* Garden logs */}
-
-
-
+         <Route
+          path="/garden-calendar"
+          element={
+            <ProtectedRoute>
+              <GardenCalendar />
+            </ProtectedRoute>
+          }
+        />
 
 
 
