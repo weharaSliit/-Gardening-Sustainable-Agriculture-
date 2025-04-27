@@ -56,7 +56,7 @@ const Nav = ({ notifications = [], onNotificationClick }) => {
             </li>
             <li>
               <a 
-                href="#about" 
+                href="/about" 
                 className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-white/10 transition-all group hover:shadow-lg hover:shadow-emerald-500/10"
               >
                 <Info className="w-5 h-5 text-emerald-100 group-hover:text-white" />
@@ -65,7 +65,7 @@ const Nav = ({ notifications = [], onNotificationClick }) => {
             </li>
             <li>
               <a 
-                href="#contact" 
+                href="/contact" 
                 className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-white/10 transition-all group hover:shadow-lg hover:shadow-emerald-500/10"
               >
                 <Mail className="w-5 h-5 text-emerald-100 group-hover:text-white" />

@@ -1,10 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+
 import Register from './components/User/Register';
 import LoginPage from './components/User/LoginPage';
 import ProfilePage from './components/User/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';   
+
+//main components
 import Home from './components/MainComponents/Home';
+import About from './components/MainComponents/About';
+import ContactUs from './components/MainComponents/ContactUs';
 
 //challanges
 import AddChallenge from './components/Challenges/AddChallenge';
@@ -15,12 +21,18 @@ import QuizStatusPage from './components/Challenges/QuizStatusPage';
 import TakeQuizPage from './components/Challenges/TakeQuizPage';
 import Leaderboard from './components/Challenges/Leaderboard';
 import AllPostedQuizzes from './components/Challenges/AllPostedQuizzes';
+
+
+
+//garden logs
 import GardenCalendar from './components/GardenLogs/GardenCalendar';
 
 //tutorial
 import THome from './components/Tutorial/THome';
 import AddTutorial from './components/Tutorial/AddTutorial';
 import DisplayTutorial from './components/Tutorial/DisplayTutorial';
+
+
 
 
 
@@ -33,6 +45,8 @@ const App = () => {
       {/* Main components */}
 
       <Route path="/" element={<Home />} /> {/*  Home as default route */}
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<ContactUs />} />
      
 
        {/* User Registation and Login */}
@@ -89,7 +103,7 @@ const App = () => {
          <Route path="/alltutorial" element={<DisplayTutorial />} />
           
   
-          {/* 404 Not Found */}
+          
 
 
 
