@@ -80,7 +80,7 @@ const TakeQuizPage = () => {
 
       {/* Quiz Card */}
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden relative z-10 border border-green-100 transform transition-all hover:shadow-2xl">
-        {/* Header */}
+        
         <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 relative overflow-hidden">
           <div className="absolute top-2 right-2 opacity-10">
             <Flower2 size={120} className="text-white" />
@@ -113,9 +113,10 @@ const TakeQuizPage = () => {
           </div>
         </div>
 
-        {/* Question Content */}
+        
         <div className="p-6">
-          {/* Personal Info Fields */}
+         
+
           <div className="mb-8 space-y-4">
             <div className="relative">
               <input
