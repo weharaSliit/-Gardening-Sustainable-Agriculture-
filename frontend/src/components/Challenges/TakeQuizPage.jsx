@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Leaf, CheckCircle } from 'lucide-react';
-import Nav from '../MainComponents/Nav';
+import { Leaf, CheckCircle, ChevronLeft, ChevronRight, Check, Circle, Sprout, Flower2 } from 'lucide-react';
 
 const TakeQuizPage = () => {
   const { id } = useParams();
@@ -56,106 +55,184 @@ const TakeQuizPage = () => {
   if (!quiz) return <p className="text-center text-green-700 text-xl mt-12">Loading... 🌿</p>;
 
   return (
-    <>
-      
-      <div className="relative min-h-screen overflow-hidden flex items-center justify-center px-4 py-16 bg-black">
-
-       
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Plant-themed background */}
       <div className="absolute inset-0 z-0">
-  
-  <div className="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-green-300 via-green-500 to-green-800 opacity-20 rounded-full blur-3xl animate-pulse"></div>
-  
-  
-  <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tr from-lime-200 via-emerald-400 to-green-700 opacity-25 rounded-full blur-2xl animate-ping"></div>
-
-  
-  <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] bg-gradient-to-br from-green-200 via-green-400 to-lime-600 opacity-10 rounded-full blur-[150px] transform -translate-x-1/2 -translate-y-1/2"></div>
-
-  
-  <div className="absolute -top-24 right-1/3 w-64 h-64 bg-gradient-to-tl from-green-100 via-green-400 to-emerald-600 opacity-20 rounded-full blur-2xl animate-pulse"></div>
-  
-  
-  <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-tr from-lime-300 via-green-500 to-teal-700 opacity-15 rounded-full blur-2xl animate-ping"></div>
-
-  
-  <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-gradient-to-br from-green-400 via-green-600 to-lime-500 opacity-20 rounded-full blur-3xl animate-pulse"></div>
-</div>
-
-        
-        <div className="relative z-10 max-w-2xl w-full bg-gray-900 text-white shadow-2xl rounded-3xl p-10 transform transition-all duration-500 hover:scale-105">
-          <div className="flex items-center mb-4">
-            <Leaf className="text-green-400 mr-2" size={36} />
-            <h2 className="text-4xl font-extrabold">{quiz.challengeTitle}</h2>
-          </div>
-          <p className="text-lg text-gray-300 mb-6">{quiz.challengeDescription}</p>
-
-          <div className="mb-6">
-            <input
-              type="text"
-              placeholder="Your Name"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              className="w-full p-4 text-lg rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 mb-4"
-            />
-            <input
-              type="email"
-              placeholder="Your Email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="w-full p-4 text-lg rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 mb-6"
-            />
-          </div>
-
-          <div className="question-section mb-8">
-            <div className="question-header mb-6">
-              <p className="text-xl font-semibold text-gray-300">{quiz.questions[currentQuestion].questionText}</p>
+        <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-teal-50 to-emerald-100 opacity-90"></div>
+        <div className="absolute top-0 left-0 w-full h-full">
+          {/* Leaf pattern */}
+          {[...Array(20)].map((_, i) => (
+            <div 
+              key={i}
+              className="absolute opacity-20"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                transform: `rotate(${Math.random() * 360}deg) scale(${0.5 + Math.random()})`,
+                color: `hsl(${100 + Math.random() * 60}, 70%, 50%)`
+              }}
+            >
+              <Leaf size={40 + Math.random() * 60} />
             </div>
-            <div className="options space-y-4">
+          ))}
+        </div>
+      </div>
+
+      {/* Quiz Card */}
+      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden relative z-10 border border-green-100 transform transition-all hover:shadow-2xl">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 relative overflow-hidden">
+          <div className="absolute top-2 right-2 opacity-10">
+            <Flower2 size={120} className="text-white" />
+          </div>
+          <div className="flex items-center justify-between relative z-10">
+            <div className="flex items-center">
+              <Leaf className="text-white mr-3" size={28} />
+              <h1 className="text-2xl font-bold text-white">{quiz.challengeTitle}</h1>
+            </div>
+            <div className="text-white font-medium bg-green-700 px-3 py-1 rounded-full text-sm">
+              Question {currentQuestion + 1}/{quiz.questions.length}
+            </div>
+          </div>
+          
+          {/* Question Progress */}
+          <div className="mt-6 flex items-center justify-center space-x-2">
+            {quiz.questions.map((_, index) => (
+              <div 
+                key={index} 
+                onClick={() => setCurrentQuestion(index)}
+                className={`h-2 rounded-full cursor-pointer transition-all duration-300 ${
+                  index <= currentQuestion 
+                    ? answers[index] ? 'bg-green-300 w-6' : 'bg-green-200 w-4'
+                    : 'bg-white/30 w-2'
+                } ${
+                  index === currentQuestion ? 'ring-2 ring-white' : ''
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Question Content */}
+        <div className="p-6">
+          {/* Personal Info Fields */}
+          <div className="mb-8 space-y-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder-green-700/50 pl-10"
+              />
+              <Sprout className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-600" size={20} />
+            </div>
+            <div className="relative">
+              <input
+                type="email"
+                placeholder="Your email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder-green-700/50 pl-10"
+              />
+              <Sprout className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-600" size={20} />
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              <span className="text-green-600 font-bold mr-2">Q{currentQuestion + 1}.</span>
+              {quiz.questions[currentQuestion].questionText}
+            </h2>
+            
+            <div className="space-y-3">
               {quiz.questions[currentQuestion].options.map((opt, optIndex) => (
-                <div key={optIndex} className="flex items-center text-lg">
-                  <input
-                    type="radio"
-                    name={`question-${currentQuestion}`}
-                    value={opt}
-                    checked={answers[currentQuestion] === opt}
-                    onChange={() => handleAnswerChange(currentQuestion, opt)}
-                    className="text-green-500 focus:ring-2 focus:ring-green-400"
-                  />
-                  <label className="ml-3 text-gray-300">{opt}</label>
+                <div 
+                  key={optIndex} 
+                  className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                    answers[currentQuestion] === opt 
+                      ? 'border-green-500 bg-green-50 shadow-sm' 
+                      : 'border-gray-200 hover:bg-gray-50'
+                  } relative overflow-hidden`}
+                  onClick={() => handleAnswerChange(currentQuestion, opt)}
+                >
+                  {answers[currentQuestion] === opt && (
+                    <div className="absolute top-0 left-0 h-full w-1 bg-green-500"></div>
+                  )}
+                  <div className="flex items-center">
+                    <div className={`mr-3 ${
+                      answers[currentQuestion] === opt ? 'text-green-600' : 'text-gray-400'
+                    }`}>
+                      {answers[currentQuestion] === opt ? (
+                        <Check className="h-5 w-5" />
+                      ) : (
+                        <Circle className="h-5 w-5" />
+                      )}
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700 mr-2">{String.fromCharCode(65 + optIndex)}.</span>
+                      <span className="text-gray-700">{opt}</span>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="flex justify-between mb-6">
+          {/* Navigation */}
+          <div className="flex justify-between border-t pt-4">
             <button
               onClick={handlePrev}
-              className="bg-gray-700 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition-all"
+              disabled={currentQuestion === 0}
+              className={`flex items-center px-4 py-2 rounded-lg font-medium transition-all ${
+                currentQuestion === 0 
+                  ? 'text-gray-400 cursor-not-allowed' 
+                  : 'text-green-600 hover:bg-green-50 hover:text-green-700'
+              }`}
             >
+              <ChevronLeft className="mr-1" size={20} />
               Previous
             </button>
-            <button
-              onClick={handleNext}
-              className="bg-gray-700 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition-all"
-            >
-              Next
-            </button>
-          </div>
-
-          {currentQuestion === quiz.questions.length - 1 && (
-            <div className="flex justify-center mt-8">
+            
+            {currentQuestion < quiz.questions.length - 1 ? (
+              <button
+                onClick={handleNext}
+                disabled={!answers[currentQuestion]}
+                className={`flex items-center px-6 py-2 rounded-lg font-medium transition-all ${
+                  answers[currentQuestion] 
+                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:shadow-md' 
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                Next
+                <ChevronRight className="ml-1" size={20} />
+              </button>
+            ) : (
               <button
                 onClick={handleSubmit}
-                className="bg-green-600 text-white py-4 px-8 rounded-lg text-lg font-semibold hover:bg-green-700 transition-all duration-300 transform hover:scale-105 flex items-center"
+                disabled={!answers[currentQuestion] || !name || !email}
+                className={`flex items-center px-6 py-2 rounded-lg font-medium transition-all ${
+                  answers[currentQuestion] && name && email
+                    ? 'bg-gradient-to-r from-green-600 to-emerald-700 text-white hover:shadow-md' 
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
               >
                 Submit Quiz
-                <CheckCircle className="inline-block ml-3 text-green-400" size={24} />
+                <CheckCircle className="ml-1" size={20} />
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
-    </>
+
+      {/* Decorative plant elements */}
+      <div className="fixed bottom-4 right-4 text-green-600 opacity-30 z-0">
+        <Leaf size={120} />
+      </div>
+      <div className="fixed top-4 left-4 text-emerald-500 opacity-20 z-0">
+        <Flower2 size={100} />
+      </div>
+    </div>
   );
 };
 
