@@ -1,13 +1,21 @@
 package com.backend.backend.controller;
 
 import com.backend.backend.dto.ProfileDTO;
+import com.backend.backend.entity.ProfileEntity;
+import com.backend.backend.repository.ProfileRepository;
 import com.backend.backend.service.JWTService;
 import com.backend.backend.service.ProfileService;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.security.Principal;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 @RestController
@@ -17,9 +25,52 @@ public class ProfileController {
     private final ProfileService profileService;
     private final JWTService jwtService;
 
-    public ProfileController(ProfileService profileService, JWTService jwtService) {
+    {/*Updated */}
+
+    @Value("${upload.directory}")
+    private String uploadDirectory;
+
+    private final ProfileRepository profileRepository;
+
+    public ProfileController(ProfileService profileService, JWTService jwtService,ProfileRepository profileRepository) {
         this.profileService = profileService;
         this.jwtService = jwtService;
+        this.profileRepository = profileRepository;
+    }
+
+    @PostMapping("/upload-picture/{userId}")
+    public ResponseEntity<?> uploadProfilePicture(
+            @PathVariable String userId,
+            @RequestParam("profilePicture") MultipartFile file
+    ){
+        if (file.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No file uploaded.");
+        }
+
+        try {
+            // Save the file to the uploads directory
+            String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            Path uploadPath = Paths.get("uploads/images", filename);
+            File directory = uploadPath.getParent().toFile();
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            file.transferTo(uploadPath);
+
+            // Update the profile with the image URL
+            ProfileEntity profile = profileRepository.findByUserId(userId).orElse(null);
+            if (profile == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Profile not found.");
+            }
+
+            profile.setImage("/uploads/images/" + filename);
+            profileRepository.save(profile);
+
+            return ResponseEntity.ok().body("Profile picture uploaded successfully.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error uploading file: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{userId}")
