@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Leaf, CheckCircle, ChevronLeft, ChevronRight, Check, Circle, Sprout, Flower2 } from 'lucide-react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TakeQuizPage = () => {
   const { id } = useParams();
@@ -21,6 +23,8 @@ const TakeQuizPage = () => {
   }, [id]);
 
   const handleSubmit = () => {
+    const score = calculateScore();
+
     fetch('http://localhost:8080/api/submissions/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -28,10 +32,28 @@ const TakeQuizPage = () => {
     })
       .then(res => res.text())
       .then(msg => {
-        alert(msg);
-        navigate(`/leaderboard/${id}`);
+        // Show congratulatory toast with the score
+        toast.success(
+          <div>
+            <p>🎉 Congratulations, {name}!</p>
+            <p>Your score: {score} / {quiz.questions.length}</p>
+          </div>,
+          {
+            autoClose: false,
+            closeButton: false,
+            position: "top-center",
+            className: "bg-green-500 text-white py-4 px-8 rounded-xl shadow-lg",
+            bodyClassName: "text-xl",
+            icon: <CheckCircle className="w-8 h-8" />,
+          }
+        );
+        setTimeout(() => navigate(`/leaderboard/${id}`), 1500);
       })
       .catch(err => console.error("Error submitting quiz:", err));
+  };
+
+  const calculateScore = () => {
+    return answers.filter((answer, index) => answer === quiz.questions[index].correctAnswer).length;
   };
 
   const handleAnswerChange = (index, option) => {
@@ -56,6 +78,8 @@ const TakeQuizPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      <ToastContainer />
+
       {/* Plant-themed background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-teal-50 to-emerald-100 opacity-90"></div>
@@ -107,16 +131,13 @@ const TakeQuizPage = () => {
                     : 'bg-white/30 w-2'
                 } ${
                   index === currentQuestion ? 'ring-2 ring-white' : ''
-                }`}
-              />
+                }`}/>
             ))}
           </div>
         </div>
 
         
         <div className="p-6">
-         
-
           <div className="mb-8 space-y-4">
             <div className="relative">
               <input
