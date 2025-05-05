@@ -3,6 +3,7 @@ import axios from "axios";
 import Nav from "../MainComponents/Nav";
 import HarvestTimeline from "./HarvestTimeline"; // Import the timeline component
 import { jwtDecode } from "jwt-decode";
+import GardenLogsAnalysis from "./GardenLogsAnalysis";
 
 const GardenCalendar = () => {
   const [calendarData, setCalendarData] = useState([]);
@@ -24,6 +25,7 @@ const GardenCalendar = () => {
   const [profilePicture, setProfilePicture] = useState(null); // State for profile picture
   const [userId, setUserId] = useState("");
   const [error, setError] = useState("");
+  const [categories, setCategories] = useState([]);
 
   const markAsRead = (id) => {
     setNotifications((prevNotifications) =>
@@ -157,6 +159,7 @@ const GardenCalendar = () => {
     }
   };
 
+
   const onNotificationClick = () => {
     setShowNotifications(!showNotifications); // Toggle notification section
   };
@@ -199,6 +202,7 @@ const GardenCalendar = () => {
       fetchCalendarData(token, userId); // Fetch updated calendar data
       setNewEntry({
         vegetable: "",
+        category: "",
         sowDate: "",
         plantDate: "",
         startDate: "",
@@ -251,6 +255,12 @@ const GardenCalendar = () => {
     } catch (error) {
       console.error("Error deleting entry:", error);
     }
+  };
+
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false); // State to toggle overlay
+
+  const toggleOverlay = () => {
+    setIsOverlayOpen(!isOverlayOpen);
   };
 
   return (
@@ -375,10 +385,18 @@ const GardenCalendar = () => {
         >
           Add New Record
         </button>
+        <button
+          onClick={toggleOverlay}
+          className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        >
+          View Graphs
+        </button>
+
         <table className="min-w-full bg-white border border-green-200 rounded-lg">
           <thead>
             <tr className="bg-green-100 text-green-800">
               <th className="p-4">Item</th>
+              <th className="p-4">Catagory</th>
               <th className="p-4">Sow Date</th>
               <th className="p-4">Plant Date</th>
               <th className="p-4">Harvest Date</th>
@@ -391,6 +409,7 @@ const GardenCalendar = () => {
             {calendarData.map((entry) => (
               <tr key={entry.id} className="border-b">
                 <td className="p-4">{entry.vegetable}</td>
+                <td className="p-4">{entry.category}</td>
                 <td className="p-4">
                   {new Date(entry.sowDate).toLocaleDateString()}
                 </td>
@@ -431,6 +450,20 @@ const GardenCalendar = () => {
 
         {/* Render the Harvest Timeline */}
         <HarvestTimeline calendarData={calendarData} />
+        {/* Overlay for Graphs */}
+        {isOverlayOpen && (
+          <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded shadow-lg w-7/8 h-7/8">
+              <button
+                onClick={toggleOverlay}
+                className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+              >
+                ✖
+              </button>
+              <GardenLogsAnalysis calendarData={calendarData} />
+            </div>
+          </div>
+        )}
 
         {/* Modal for Adding/Editing Entry */}
         {isModalOpen && (
@@ -449,6 +482,21 @@ const GardenCalendar = () => {
                   onChange={handleInputChange}
                   className="border border-green-300 p-2 rounded"
                 />
+                <label className="text-green-800">Category</label>
+                <select
+                  name="category"
+                  value={newEntry.category || ""}
+                  onChange={handleInputChange}
+                  className="border border-green-300 p-2 rounded"
+                >
+                  <option value="" disabled>
+                    Select Category
+                  </option>
+                  <option value="Vegetable">Vegetable</option>
+                    <option value="Fruit">Fruit</option>
+                    <option value="Grains">Grains</option>
+                    <option value="Greens">Greens</option>
+                </select>
                 <label className="text-green-800">Sow Date</label>
                 <input
                   type="date"
