@@ -10,6 +10,7 @@ public class GardenCalendarEntity {
     private String id;
     private String userId; // Add userId field
     private String vegetable;
+    private String category;
     private Date sowDate;
     private Date plantDate;
     private Date startDate;
@@ -41,6 +42,14 @@ public class GardenCalendarEntity {
 
     public void setVegetable(String vegetable) {
         this.vegetable = vegetable;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Date getSowDate() {
