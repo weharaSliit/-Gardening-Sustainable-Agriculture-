@@ -17,10 +17,10 @@ import AddChallenge from './components/Challenges/AddChallenge';
 import QuizManagement from './components/Challenges/QuizManagement';
 import EditChallenge from './components/Challenges/EditChallenge';
 import ChallengeHome from './components/Challenges/ChallengeHome';
-import QuizStatusPage from './components/Challenges/QuizStatusPage';
 import TakeQuizPage from './components/Challenges/TakeQuizPage';
 import Leaderboard from './components/Challenges/Leaderboard';
 import AllPostedQuizzes from './components/Challenges/AllPostedQuizzes';
+import QuizStatistics from './components/Challenges/QuizStatistics';
 
 
 
@@ -68,7 +68,7 @@ const App = () => {
          <Route path="/add-challenge" element={<AddChallenge />} />
          <Route path="/all-challenge" element={<QuizManagement />} />
          <Route path="/update-challenge/:challengeId" element={<EditChallenge />} />
-         <Route path="/quiz-status" element={<QuizStatusPage />} />
+         <Route path="/quiz-statistics" element={<QuizStatistics />} />
 
 
          <Route path="/take-quiz/:id" element={<TakeQuizPage />} />
