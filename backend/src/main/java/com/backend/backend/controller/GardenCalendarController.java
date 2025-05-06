@@ -53,6 +53,7 @@ public GardenCalendarEntity addEntry(@RequestBody GardenCalendarEntity entry, @R
                 throw new RuntimeException("Unauthorized access");
             }
             entry.setVegetable(updatedEntry.getVegetable());
+            entry.setCategory(updatedEntry.getCategory());
             entry.setSowDate(updatedEntry.getSowDate());
             entry.setPlantDate(updatedEntry.getPlantDate());
             entry.setStartDate(updatedEntry.getStartDate());
