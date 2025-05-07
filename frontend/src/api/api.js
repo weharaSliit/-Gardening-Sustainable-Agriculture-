@@ -27,3 +27,9 @@ export const getAllUsers = async (token) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+export const getNotifications = async (token) => {
+  return axios.get(`${API_BASE_URL}/garden-calendar/notifications`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};

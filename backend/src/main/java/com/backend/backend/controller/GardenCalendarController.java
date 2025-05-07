@@ -1,7 +1,9 @@
 package com.backend.backend.controller;
 
+import com.backend.backend.dto.NotificationDTO;
 import com.backend.backend.entity.GardenCalendarEntity;
 import com.backend.backend.repository.GardenCalendarRepository;
+import com.backend.backend.service.GardenCalendarService;
 import com.backend.backend.service.JWTService;
 
 import java.util.List;
@@ -20,12 +22,22 @@ public class GardenCalendarController {
     @Autowired
     private JWTService jwtService;
 
+    @Autowired
+    private GardenCalendarService gardenCalendarService;
+
+    @GetMapping("/notifications")
+    public List<NotificationDTO> getNotifications(@RequestHeader("Authorization") String token) {
+        String userId = (String) jwtService.getFieldFromToken(token.replace("Bearer ", ""), "userId");
+        return gardenCalendarService.getNotifications(userId);
+    }
+
     @GetMapping
     public List<GardenCalendarEntity> getUserEntries(@RequestHeader("Authorization") String token) {
         String userId = (String) jwtService.getFieldFromToken(token.replace("Bearer ", ""), "userId");
         return gardenCalendarRepository.findByUserId(userId);
     }
 
+    
     @PostMapping
 public GardenCalendarEntity addEntry(@RequestBody GardenCalendarEntity entry, @RequestHeader("Authorization") String token) {
     String userId = (String) jwtService.getFieldFromToken(token.replace("Bearer ", ""), "userId");
@@ -41,6 +53,7 @@ public GardenCalendarEntity addEntry(@RequestBody GardenCalendarEntity entry, @R
                 throw new RuntimeException("Unauthorized access");
             }
             entry.setVegetable(updatedEntry.getVegetable());
+            entry.setCategory(updatedEntry.getCategory());
             entry.setSowDate(updatedEntry.getSowDate());
             entry.setPlantDate(updatedEntry.getPlantDate());
             entry.setStartDate(updatedEntry.getStartDate());
