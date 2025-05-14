@@ -77,7 +77,7 @@ public class ChallengeEntity {
         this.badgeAwarded = badgeAwarded;
     }
 
-    // ✅ Getters and Setters
+    //  Getters and Setters
     public String getChallengeId() {
         return challengeId;
     }
