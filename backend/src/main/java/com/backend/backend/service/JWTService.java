@@ -1,6 +1,7 @@
 package com.backend.backend.service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -63,6 +65,20 @@ public class JWTService {
         }catch (Exception e){
             return null;
         }
+    }
+
+    public String generateToken(String userId, String email) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
+        claims.put("email", email);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(email)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
     }
     
 

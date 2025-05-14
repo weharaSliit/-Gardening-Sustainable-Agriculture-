@@ -39,4 +39,15 @@ public class ProfileService {
         userRepository.save(user);
         return new ProfileDTO(savedProfile.getId(), savedProfile.getImage(), savedProfile.getStatus());
     }
+
+    public void createProfileIfNotExists(String userId) {
+        if (profileRepository.findByUserId(userId).isEmpty()) {
+            ProfileEntity profile = new ProfileEntity(null, true); // Default profile
+            UserEntity user = userRepository.findById(userId).orElse(null);
+            if (user != null) {
+                profile.setUser(user);
+                profileRepository.save(profile);
+            }
+        }
+    }
 }

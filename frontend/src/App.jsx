@@ -1,11 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-
+//user components
 import Register from './components/User/Register';
 import LoginPage from './components/User/LoginPage';
-import ProfilePage from './components/User/ProfilePage';
-import ProtectedRoute from './components/ProtectedRoute';   
+import ProfilePage from './components/User/UserProfile';
+import ProtectedRoute from './components/ProtectedRoute';  
+import GoogleLoginButton from './components/User/GoogleLoginButton'; 
+import AdminDashboard from './components/User/AdminDashboard';
 
 //main components
 import Home from './components/MainComponents/Home';
@@ -21,8 +23,6 @@ import QuizStatusPage from './components/Challenges/QuizStatusPage';
 import TakeQuizPage from './components/Challenges/TakeQuizPage';
 import Leaderboard from './components/Challenges/Leaderboard';
 import AllPostedQuizzes from './components/Challenges/AllPostedQuizzes';
-
-
 
 //garden logs
 import GardenCalendar from './components/GardenLogs/GardenCalendar';
@@ -50,7 +50,6 @@ const App = () => {
      
 
        {/* User Registation and Login */}
-
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<LoginPage />} />
         <Route
@@ -61,6 +60,9 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/google-login" element={<GoogleLoginButton />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} /> 
+
         
 
          {/* Challenge */}
