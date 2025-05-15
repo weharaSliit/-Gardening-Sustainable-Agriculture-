@@ -21,6 +21,7 @@ import TakeQuizPage from './components/Challenges/TakeQuizPage';
 import Leaderboard from './components/Challenges/Leaderboard';
 import AllPostedQuizzes from './components/Challenges/AllPostedQuizzes';
 import QuizStatistics from './components/Challenges/QuizStatistics';
+import UserChallengeHome from './components/Challenges/UserChallengeHome';
 
 
 
@@ -32,6 +33,7 @@ import THome from './components/Tutorial/THome';
 import AddTutorial from './components/Tutorial/AddTutorial';
 import DisplayTutorial from './components/Tutorial/DisplayTutorial';
 import UpdateTutorial from './components/Tutorial/UpdateTutorial';
+
 
 
 
@@ -77,6 +79,7 @@ const App = () => {
          <Route path="/take-quiz/:id" element={<TakeQuizPage />} />
         <Route path="/leaderboard/:id" element={<Leaderboard />} />
         <Route path="/all-posted-quizzes" element={<AllPostedQuizzes />} />
+        <Route path="/user-challenge-home" element={<UserChallengeHome />} />
 
 
 

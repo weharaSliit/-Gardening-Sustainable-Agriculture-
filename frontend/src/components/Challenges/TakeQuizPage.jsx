@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import * as jwt_decode from 'jwt-decode';
 import { Leaf, CheckCircle, ChevronLeft, ChevronRight, Check, Circle, Sprout, Flower2 } from 'lucide-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,10 +12,21 @@ const TakeQuizPage = () => {
   const [answers, setAnswers] = useState([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [userId, setUserId] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwt_decode.jwtDecode(token);
+        setUserId(decoded.id); // assuming the payload has `id`
+      } catch (err) {
+        console.error("Invalid token", err);
+      }
+    }
+
     fetch(`http://localhost:8080/api/v1/challenges/viewChallenge/${id}`)
       .then(res => res.json())
       .then(data => {
@@ -23,16 +36,32 @@ const TakeQuizPage = () => {
   }, [id]);
 
   const handleSubmit = () => {
+    const token = localStorage.getItem("token"); // Retrieve token here
+    if (!token) {
+      toast.error("You must be logged in to submit the quiz.");
+      return;
+    }
+
     const score = calculateScore();
+
+    const payload = {
+      challengeId: id,
+      name,
+      email,
+      userId,
+      answers,
+    };
 
     fetch('http://localhost:8080/api/submissions/submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ challengeId: id, name, email, answers }),
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      },
+      body: JSON.stringify(payload),
     })
       .then(res => res.text())
       .then(msg => {
-        // Show congratulatory toast with the score
         toast.success(
           <div>
             <p>🎉 Congratulations, {name}!</p>
@@ -80,13 +109,12 @@ const TakeQuizPage = () => {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
       <ToastContainer />
 
-      {/* Plant-themed background */}
+      {/* Background Design */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-teal-50 to-emerald-100 opacity-90"></div>
         <div className="absolute top-0 left-0 w-full h-full">
-          {/* Leaf pattern */}
           {[...Array(20)].map((_, i) => (
-            <div 
+            <div
               key={i}
               className="absolute opacity-20"
               style={{
@@ -103,8 +131,7 @@ const TakeQuizPage = () => {
       </div>
 
       {/* Quiz Card */}
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden relative z-10 border border-green-100 transform transition-all hover:shadow-2xl">
-        
+      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden relative z-10 border border-green-100">
         <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 relative overflow-hidden">
           <div className="absolute top-2 right-2 opacity-10">
             <Flower2 size={120} className="text-white" />
@@ -118,12 +145,10 @@ const TakeQuizPage = () => {
               Question {currentQuestion + 1}/{quiz.questions.length}
             </div>
           </div>
-          
-          {/* Question Progress */}
           <div className="mt-6 flex items-center justify-center space-x-2">
             {quiz.questions.map((_, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 onClick={() => setCurrentQuestion(index)}
                 className={`h-2 rounded-full cursor-pointer transition-all duration-300 ${
                   index <= currentQuestion 
@@ -131,12 +156,12 @@ const TakeQuizPage = () => {
                     : 'bg-white/30 w-2'
                 } ${
                   index === currentQuestion ? 'ring-2 ring-white' : ''
-                }`}/>
+                }`}
+              />
             ))}
           </div>
         </div>
 
-        
         <div className="p-6">
           <div className="mb-8 space-y-4">
             <div className="relative">
@@ -166,14 +191,13 @@ const TakeQuizPage = () => {
               <span className="text-green-600 font-bold mr-2">Q{currentQuestion + 1}.</span>
               {quiz.questions[currentQuestion].questionText}
             </h2>
-            
             <div className="space-y-3">
               {quiz.questions[currentQuestion].options.map((opt, optIndex) => (
-                <div 
-                  key={optIndex} 
+                <div
+                  key={optIndex}
                   className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                    answers[currentQuestion] === opt 
-                      ? 'border-green-500 bg-green-50 shadow-sm' 
+                    answers[currentQuestion] === opt
+                      ? 'border-green-500 bg-green-50 shadow-sm'
                       : 'border-gray-200 hover:bg-gray-50'
                   } relative overflow-hidden`}
                   onClick={() => handleAnswerChange(currentQuestion, opt)}
@@ -215,7 +239,6 @@ const TakeQuizPage = () => {
               <ChevronLeft className="mr-1" size={20} />
               Previous
             </button>
-            
             {currentQuestion < quiz.questions.length - 1 ? (
               <button
                 onClick={handleNext}
@@ -247,7 +270,7 @@ const TakeQuizPage = () => {
         </div>
       </div>
 
-      {/* Decorative plant elements */}
+      {/* Decorative Plants */}
       <div className="fixed bottom-4 right-4 text-green-600 opacity-30 z-0">
         <Leaf size={120} />
       </div>
