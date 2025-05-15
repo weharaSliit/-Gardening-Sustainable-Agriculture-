@@ -65,4 +65,10 @@ public class SubmissionController {
     public List<Submission> getAllSubmissions() {
         return submissionRepo.findAll();
     }
+
+    @GetMapping("/user/{userId}")
+    public List<Submission> getSubmissionsByUser(@PathVariable String userId) {
+        return submissionRepo.findByUserId(userId);
+    }
+
 }
