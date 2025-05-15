@@ -73,6 +73,28 @@ public class ProfileController {
         }
     }
 
+    @GetMapping("/profile")
+public ResponseEntity<?> getProfile(@RequestHeader("Authorization") String token) {
+    try {
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authorization header is missing or invalid"));
+        }
+
+        String userId = (String) jwtService.getFieldFromToken(token.replace("Bearer ", ""), "userId");
+
+        ProfileDTO profile = profileService.getProfileByUserId(userId);
+        if (profile == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Invalid user id"));
+        }
+
+        return ResponseEntity.ok(profile);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "An unexpected error occurred"));
+    }
+}
+
     @GetMapping("/{userId}")
     public ResponseEntity<?> getProfile(@PathVariable String userId, @RequestHeader("Authorization") String token) {
         try {
@@ -80,21 +102,20 @@ public class ProfileController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("error", "Authorization header is missing or invalid"));
             }
-
+    
             String extractedUserId = (String) jwtService.getFieldFromToken(token.replace("Bearer ", ""), "userId");
-
+    
             if (!userId.equals(extractedUserId)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Access denied"));
             }
-
+    
             ProfileDTO profile = profileService.getProfileByUserId(userId);
             if (profile == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Invalid user id"));
             }
-
+    
             return ResponseEntity.ok(profile);
         } catch (Exception e) {
-            // Log the exception and return a 500 error with a meaningful message
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "An unexpected error occurred"));
         }
