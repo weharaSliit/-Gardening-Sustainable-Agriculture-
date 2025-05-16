@@ -22,7 +22,6 @@ import ChallengeHome from './components/Challenges/ChallengeHome';
 import TakeQuizPage from './components/Challenges/TakeQuizPage';
 import Leaderboard from './components/Challenges/Leaderboard';
 import AllPostedQuizzes from './components/Challenges/AllPostedQuizzes';
-<<<<<<< HEAD
 
 //Community
 import CommunityHome from './components/Community/CommunityHome';
@@ -32,10 +31,8 @@ import EditPost from './components/Community/EditPost';
 import UserPosts from './components/Community/UserPosts';
 import VerifiedPosts from './components/Community/VerifiedPosts';
 import PostDetails from './components/Community/PostDetails';
-=======
 import QuizStatistics from './components/Challenges/QuizStatistics';
 import UserChallengeHome from './components/Challenges/UserChallengeHome';
->>>>>>> 3025f9832eb8e30435201c44e830d7f49eaa5272
 
 //garden logs
 import GardenCalendar from './components/GardenLogs/GardenCalendar';
