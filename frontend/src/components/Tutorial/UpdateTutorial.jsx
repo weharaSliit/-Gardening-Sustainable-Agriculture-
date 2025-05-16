@@ -219,7 +219,7 @@ export default function UpdateTutorial() {
       
       // Navigate back after a short delay to show the success message
       setTimeout(() => {
-        navigate('/alltutorial');
+        navigate(`/tutorial/${id}`); // Navigate to detail view with fresh data
       }, 1500);
       
     } catch (err) {
