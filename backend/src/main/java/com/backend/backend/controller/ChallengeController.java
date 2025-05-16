@@ -1,18 +1,21 @@
 package com.backend.backend.controller;
 
 import com.backend.backend.entity.ChallengeEntity;
+import com.backend.backend.entity.Submission;
 import com.backend.backend.exception.ChallengeNotFoundException;
 import com.backend.backend.repository.ChallengeRepository;
-import com.backend.backend.service.ChallengeService;
+import com.backend.backend.repository.SubmissionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/v1/challenges")
@@ -21,6 +24,9 @@ public class ChallengeController {
     @Autowired
 
     private ChallengeRepository challengeRepository;
+
+    @Autowired
+    private SubmissionRepository submissionRepository;
 
     //insert crud
     @PostMapping("/challenge") //call the path. need in frontend
@@ -118,6 +124,34 @@ public class ChallengeController {
     @GetMapping("/posted")
     public List<ChallengeEntity> getPostedQuizzes() {
         return challengeRepository.findByIsPostedTrue();
+    }
+
+
+    // Get statistics for quizzes
+    @GetMapping("/quizStatistics")
+    public ResponseEntity<Map<String, Object>> getQuizStatistics() {
+        List<ChallengeEntity> challenges = challengeRepository.findAll();
+        List<Submission> submissions = submissionRepository.findAll();
+
+        int totalQuizzes = challenges.size();
+        int totalSubmissions = submissions.size();
+        Map<String, Object> stats = new HashMap<>();
+
+        stats.put("totalQuizzes", totalQuizzes);
+        stats.put("totalSubmissions", totalSubmissions);
+
+        Map<String, Integer> quizEngagement = new HashMap<>();
+
+        for (ChallengeEntity challenge : challenges) {
+            int engagement = (int) submissions.stream()
+                    .filter(submission -> submission.getChallengeId().equals(challenge.getChallengeId()))
+                    .count();
+            quizEngagement.put(challenge.getChallengeTitle(), engagement);
+        }
+
+        stats.put("quizEngagement", quizEngagement);
+
+        return ResponseEntity.ok(stats);
     }
 
 
