@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { Leaf, Trophy, Award, Sprout, ChevronsUp, LeafyGreen, Flower2, Sun, Cloud, Droplets } from 'lucide-react';
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+
 
 const FloatingLeaves = ({ count = 15 }) => {
   const leaves = Array.from({ length: count }).map((_, i) => {
@@ -220,7 +222,7 @@ const LeaderboardItem = ({ submission, index }) => {
         isTop3 ? 'bg-gradient-to-r from-green-50/80 to-emerald-50/80' : ''
       } group relative overflow-hidden`}
     >
-      {/* Animated border for top 3 */}
+      
       {isTop3 && (
         <motion.div 
           className={`absolute inset-0 rounded-lg ${
@@ -323,6 +325,7 @@ const LeaderboardItem = ({ submission, index }) => {
 
 const Leaderboard = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [submissions, setSubmissions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -350,7 +353,7 @@ const Leaderboard = () => {
   };
 
   useEffect(() => {
-    // Simulate loading with a delay for demo purposes
+    
     const timer = setTimeout(() => {
       fetch(`http://localhost:8080/api/submissions/leaderboard/${id}`)
         .then(res => res.json())
@@ -410,7 +413,7 @@ const Leaderboard = () => {
       <AnimatedBackground />
       
       <div className="max-w-4xl mx-auto relative z-10">
-        {/* Animated Header */}
+       
         <motion.div 
           initial="hidden"
           animate="visible"
@@ -476,6 +479,27 @@ const Leaderboard = () => {
           >
             {subtitleText}
           </motion.p>
+
+          {/* Dashboard Button */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.8 }}
+            className="mt-8 flex justify-center"
+          >
+            <motion.button
+              whileHover={{ 
+                scale: 1.05, 
+                boxShadow: '0 5px 15px -5px rgba(5, 150, 105, 0.4)'
+              }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/user-challenge-home')}
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full font-medium shadow-md hover:shadow-lg transition-all"
+            >
+              <Leaf className="w-5 h-5" />
+              Go to Your Dashboard
+            </motion.button>
+          </motion.div>
           
           {/* Animated decorative elements */}
           <motion.div
@@ -505,7 +529,7 @@ const Leaderboard = () => {
           />
         </motion.div>
 
-        {/* Search and Filter */}
+        {/* Search */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -562,7 +586,7 @@ const Leaderboard = () => {
             transition={{ duration: 0.8 }}
             className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border-2 border-green-200/50"
           >
-            {/* Header */}
+           
             <div className="grid grid-cols-12 bg-gradient-to-r from-green-700 via-emerald-700 to-teal-700 text-white p-5 font-bold text-lg sticky top-0 z-20">
               <div className="col-span-1 text-center">Rank</div>
               <div className="col-span-5 flex items-center gap-2">
