@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Nav from "../MainComponents/Nav";
 import { motion } from "framer-motion";
 import { FaChartLine, FaSeedling, FaBook, FaSignOutAlt, FaLeaf, FaBug } from "react-icons/fa";
 import Nav from "../MainComponents/Nav"; // Adjust the import path as necessary
