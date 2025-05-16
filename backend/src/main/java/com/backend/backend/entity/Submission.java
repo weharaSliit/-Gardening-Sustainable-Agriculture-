@@ -9,6 +9,7 @@ public class Submission {
 
     private String id;
     private String challengeId; // Reference to quiz
+    private String userId;
     private String name;
     private String email;
     private int score;
@@ -51,6 +52,14 @@ public class Submission {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
 

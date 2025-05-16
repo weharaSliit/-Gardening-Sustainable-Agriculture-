@@ -41,4 +41,5 @@ public class SubmissionRequest {
     public void setAnswers(List<String> answers) {
         this.answers = answers;
     }
+
 }

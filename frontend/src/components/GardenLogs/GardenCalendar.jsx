@@ -3,10 +3,12 @@ import axios from "axios";
 import Nav from "../MainComponents/Nav";
 import HarvestTimeline from "./HarvestTimeline"; // Import the timeline component
 import { jwtDecode } from "jwt-decode";
+import GardenLogsAnalysis from "./GardenLogsAnalysis";
 
 const GardenCalendar = () => {
   const [calendarData, setCalendarData] = useState([]);
   const [notifications, setNotifications] = useState([]); // State for notifications
+  const [toBeHarvested, setToBeHarvested] = useState([]); // State for to-be-harvested records
   const [showNotifications, setShowNotifications] = useState(false); // State to toggle notification section
   const [newEntry, setNewEntry] = useState({
     vegetable: "",
@@ -24,6 +26,8 @@ const GardenCalendar = () => {
   const [profilePicture, setProfilePicture] = useState(null); // State for profile picture
   const [userId, setUserId] = useState("");
   const [error, setError] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [formErrors, setFormErrors] = useState({});
 
   const markAsRead = (id) => {
     setNotifications((prevNotifications) =>
@@ -82,9 +86,9 @@ const GardenCalendar = () => {
         setProfile(profileResponse.data);
 
         // Fetch calendar data
-        fetchCalendarData(token, userIdFromToken);
-
-        fetchNotifications(token);
+        await fetchCalendarData(token, userIdFromToken);
+        // Fetch notifications
+        await fetchNotifications(token);
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Failed to fetch data");
@@ -103,11 +107,17 @@ const GardenCalendar = () => {
         }
       );
       setCalendarData(response.data);
+
+      // Filter to-be-harvested records
+      const currentDate = new Date();
+      const filteredData = response.data.filter(
+        (entry) => new Date(entry.startDate) > currentDate
+      );
+      setToBeHarvested(filteredData);
     } catch (error) {
       console.error("Error fetching calendar data:", error);
     }
   };
-
   const getDateClass = (startDate, endDate) => {
     const currentDate = new Date();
     const start = new Date(startDate);
@@ -166,7 +176,53 @@ const GardenCalendar = () => {
     setNewEntry({ ...newEntry, [name]: value });
   };
 
+  const getHarvestingStatus = (startDate, endDate) => {
+    const currentDate = new Date();
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (currentDate > end) {
+      return "Done"; // Harvesting is completed
+    } else if (currentDate >= start && currentDate <= end) {
+      return "In Progress"; // Harvesting is ongoing
+    } else {
+      return "Upcoming"; // Harvesting has not started yet
+    }
+  };
+
+  const validateForm = () => {
+    const errors = {};
+
+    // Check required fields
+    if (!newEntry.vegetable.trim()) errors.vegetable = "Item is required.";
+    if (!newEntry.sowDate) errors.sowDate = "Sow Date is required.";
+    if (!newEntry.plantDate) errors.plantDate = "Plant Date is required.";
+    if (!newEntry.startDate)
+      errors.startDate = "Harvest Start Date is required.";
+    if (!newEntry.endDate) errors.endDate = "Harvest End Date is required.";
+    if (!newEntry.quantity || newEntry.quantity <= 0)
+      errors.quantity = "Quantity must be greater than 0.";
+
+    // Validate date order
+    const sowDate = new Date(newEntry.sowDate);
+    const plantDate = new Date(newEntry.plantDate);
+    const startDate = new Date(newEntry.startDate);
+    const endDate = new Date(newEntry.endDate);
+
+    if (plantDate < sowDate)
+      errors.plantDate = "Plant Date must be after Sow Date.";
+    if (startDate < plantDate)
+      errors.startDate = "Harvest Start Date must be after Plant Date.";
+    if (endDate < startDate)
+      errors.endDate = "Harvest End Date must be after Harvest Start Date.";
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0; // Return true if no errors
+  };
+
   const handleAddEntry = async () => {
+    if (!validateForm()) return; // Stop submission if form is invalid
+
     const token = localStorage.getItem("token");
     if (!token) {
       alert("You must be logged in to perform this action.");
@@ -253,6 +309,12 @@ const GardenCalendar = () => {
     }
   };
 
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false); // State to toggle overlay
+
+  const toggleOverlay = () => {
+    setIsOverlayOpen(!isOverlayOpen);
+  };
+
   return (
     <div className="relative">
       {/* Navigation Bar as an Overlay */}
@@ -306,42 +368,17 @@ const GardenCalendar = () => {
             <div className="flex flex-col sm:flex-row items-center">
               {/* Profile Picture and Name */}
               <div className="flex flex-col items-center sm:items-start sm:w-1/3">
-                <div className="w-32 h-32 rounded-full bg-gray-300 mb-4 overflow-hidden shadow-md">
-                  <img
-                    src={profilePicture || "/profile-placeholder.png"} // Display the uploaded image or a placeholder
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
                 <h2 className="text-2xl font-bold text-green-800">
                   {profile.name}
                 </h2>
-                <p className="text-gray-600 text-sm">
-                  {profile.role || "User Role"}
-                </p>
-                {/* File Input for Profile Picture */}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleProfilePictureUpload}
-                  className="mt-4"
-                />
               </div>
 
               {/* Profile Details */}
               <div className="sm:w-2/3 mt-6 sm:mt-0 sm:ml-10">
-                <h3 className="text-lg font-semibold text-green-800 mb-4">
-                  User Information
-                </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-700">
                       <strong>User ID:</strong> {profile.id}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-700">
-                      <strong>Email:</strong> {profile.email}
                     </p>
                   </div>
                 </div>
@@ -375,15 +412,56 @@ const GardenCalendar = () => {
         >
           Add New Record
         </button>
+
+        <button
+          onClick={toggleOverlay}
+          className="ml-5 mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        >
+          View Graphs
+        </button>
+
+        <table className="min-w-full bg-white border border-green-200 rounded-lg mb-6">
+          <thead>
+            <tr className="bg-green-100 text-green-800">
+              <th className="p-4">Item</th>
+              <th className="p-4">Category</th>
+              <th className="p-4">Harvest Start Date</th>
+              <th className="p-4">Harvest End Date</th>
+              <th className="p-4">Quantity</th>
+              <th className="p-4">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {toBeHarvested.map((entry) => (
+              <tr key={entry.id} className="border-b">
+                <td className="p-4">{entry.vegetable}</td>
+                <td className="p-4">{entry.category}</td>
+                <td className="p-4">
+                  {new Date(entry.startDate).toLocaleDateString()}
+                </td>
+                <td className="p-4">
+                  {new Date(entry.endDate).toLocaleDateString()}
+                </td>
+                <td className="p-4">
+                  {entry.quantity} {entry.quantityScale || "kg"}
+                </td>
+                <td className="p-4">{entry.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
         <table className="min-w-full bg-white border border-green-200 rounded-lg">
           <thead>
             <tr className="bg-green-100 text-green-800">
               <th className="p-4">Item</th>
+              <th className="p-4">Catagory</th>
               <th className="p-4">Sow Date</th>
               <th className="p-4">Plant Date</th>
               <th className="p-4">Harvest Date</th>
               <th className="p-4">Quantity</th>
               <th className="p-4">Description</th>
+              <th className="p-4">Status</th>
               <th className="p-4">Actions</th>
             </tr>
           </thead>
@@ -391,6 +469,7 @@ const GardenCalendar = () => {
             {calendarData.map((entry) => (
               <tr key={entry.id} className="border-b">
                 <td className="p-4">{entry.vegetable}</td>
+                <td className="p-4">{entry.category}</td>
                 <td className="p-4">
                   {new Date(entry.sowDate).toLocaleDateString()}
                 </td>
@@ -410,6 +489,23 @@ const GardenCalendar = () => {
                   {entry.quantity} {entry.quantityScale || "kg"}
                 </td>
                 <td className="p-4">{entry.description}</td>
+                <td className="p-4">
+                  <span
+                    className={`px-2 py-1 rounded ${
+                      getHarvestingStatus(entry.startDate, entry.endDate) ===
+                      "Done"
+                        ? "bg-green-100 text-green-800"
+                        : getHarvestingStatus(
+                            entry.startDate,
+                            entry.endDate
+                          ) === "In Progress"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {getHarvestingStatus(entry.startDate, entry.endDate)}
+                  </span>
+                </td>
                 <td className="p-4">
                   <button
                     onClick={() => handleEditEntry(entry)}
@@ -431,6 +527,20 @@ const GardenCalendar = () => {
 
         {/* Render the Harvest Timeline */}
         <HarvestTimeline calendarData={calendarData} />
+        {/* Overlay for Graphs */}
+        {isOverlayOpen && (
+          <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded shadow-lg w-7/8 h-7/8">
+              <button
+                onClick={toggleOverlay}
+                className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+              >
+                ✖
+              </button>
+              <GardenLogsAnalysis calendarData={calendarData} />
+            </div>
+          </div>
+        )}
 
         {/* Modal for Adding/Editing Entry */}
         {isModalOpen && (
@@ -441,15 +551,40 @@ const GardenCalendar = () => {
               </h2>
               <div className="grid grid-cols-2 gap-4">
                 <label className="text-green-800">Item</label>
-                <input
-                  type="text"
-                  name="vegetable"
-                  placeholder="Vegetable"
-                  value={newEntry.vegetable}
+                <div>
+                  <input
+                    type="text"
+                    name="vegetable"
+                    placeholder="Vegetable"
+                    value={newEntry.vegetable}
+                    onChange={handleInputChange}
+                    className="border border-green-300 p-2 rounded"
+                  />
+                  {formErrors.vegetable && (
+                    <p className="text-red-600 text-sm">
+                      {formErrors.vegetable}
+                    </p>
+                  )}
+                </div>
+
+                <label className="text-green-800">Category</label>
+                <select
+                  name="category"
+                  value={newEntry.category || ""}
                   onChange={handleInputChange}
                   className="border border-green-300 p-2 rounded"
-                />
+                >
+                  <option value="" disabled>
+                    Select Category
+                  </option>
+                  <option value="Vegetable">Vegetable</option>
+                  <option value="Fruit">Fruit</option>
+                  <option value="Grains">Grains</option>
+                  <option value="Greens">Greens</option>
+                </select>
+
                 <label className="text-green-800">Sow Date</label>
+                <div>
                 <input
                   type="date"
                   name="sowDate"
@@ -458,7 +593,13 @@ const GardenCalendar = () => {
                   onChange={handleInputChange}
                   className="border border-green-300 p-2 rounded"
                 />
+                {formErrors.sowDate && (
+      <p className="text-red-600 text-sm">{formErrors.sowDate}</p>
+    )}
+                </div>
+
                 <label className="text-green-800">Plant</label>
+                <div>
                 <input
                   type="date"
                   name="plantDate"
@@ -467,7 +608,13 @@ const GardenCalendar = () => {
                   onChange={handleInputChange}
                   className="border border-green-300 p-2 rounded"
                 />
+                {formErrors.plantDate && (
+      <p className="text-red-600 text-sm">{formErrors.plantDate}</p>
+    )}
+                </div>
+
                 <label className="text-green-800">Harvest(Start Date)</label>
+                <div>
                 <input
                   type="date"
                   name="startDate"
@@ -476,7 +623,13 @@ const GardenCalendar = () => {
                   onChange={handleInputChange}
                   className="border border-green-300 p-2 rounded"
                 />
+                {formErrors.startDate && (
+      <p className="text-red-600 text-sm">{formErrors.startDate}</p>
+    )}
+                </div>
+
                 <label className="text-green-800">Harvest(End Date)</label>
+                <div>
                 <input
                   type="date"
                   name="endDate"
@@ -485,6 +638,11 @@ const GardenCalendar = () => {
                   onChange={handleInputChange}
                   className="border border-green-300 p-2 rounded"
                 />
+                {formErrors.endDate && (
+      <p className="text-red-600 text-sm">{formErrors.endDate}</p>
+    )}
+                </div>
+
                 <label className="text-green-800">Quantity</label>
                 <div className="flex items-center">
                   <input

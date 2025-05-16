@@ -27,6 +27,12 @@ const HarvestTimeline = ({ calendarData }) => {
 
   const groupedActivities = groupActivitiesByMonth(calendarData);
 
+  // Function to determine if the status is "Done"
+  const isDone = (endDate) => {
+    const currentDate = new Date();
+    return currentDate > new Date(endDate);
+  };
+
   return (
     <div className="mt-8">
       <h2 className="text-xl font-bold text-green-800 mb-4">Harvest Timeline</h2>
@@ -84,6 +90,12 @@ const HarvestTimeline = ({ calendarData }) => {
                           <span className="block text-xs">
                             {new Date(activity.date).toLocaleDateString()}
                           </span>
+                          {/* Display "Done" if the activity is completed */}
+                          {activity.type === "Harvest" && isDone(entry.endDate) && (
+                            <span className="block text-xs text-green-700 font-semibold">
+                              Done
+                            </span>
+                          )}
                         </div>
                       );
                     })}
