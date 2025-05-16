@@ -20,6 +20,7 @@ public class UserEntity {
     @DBRef
     private ProfileEntity profile;
 
+
     public UserEntity() {
     }
 

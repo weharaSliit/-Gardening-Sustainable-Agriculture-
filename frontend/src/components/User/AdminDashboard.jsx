@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Nav from "../MainComponents/Nav";
+import Nav from "../MainComponents/Nav"; // Adjust the import path as necessary
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const AdminDashboard = () => {
             <h3 className="text-lg font-bold mb-2">View Reports</h3>
             <p className="text-gray-600">Analyze system performance and user activity.</p>
             <button
-              onClick={() => navigate("/admin/reports")}
+              onClick={() => navigate("/admin/admin-garden-logs")}
               className="mt-3 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
             >
               View Reports

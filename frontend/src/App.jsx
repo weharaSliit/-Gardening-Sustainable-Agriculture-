@@ -26,6 +26,7 @@ import AllPostedQuizzes from './components/Challenges/AllPostedQuizzes';
 
 //garden logs
 import GardenCalendar from './components/GardenLogs/GardenCalendar';
+import AdminGardenLogs from './components/GardenLogs/AdminGardenLogs';
 
 //tutorial
 import THome from './components/Tutorial/THome';
@@ -62,6 +63,7 @@ const App = () => {
         />
         <Route path="/google-login" element={<GoogleLoginButton />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} /> 
+       
 
         
 
@@ -89,6 +91,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+          <Route path="/admin/admin-garden-logs" element={<AdminGardenLogs />} /> 
 
 
 
