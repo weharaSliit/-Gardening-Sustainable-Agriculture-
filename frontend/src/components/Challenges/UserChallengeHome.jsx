@@ -229,7 +229,7 @@ const UserChallengeHome = () => {
                 >
                   {totalAttempts === 0 ? (                          // If no quizzes taken → show SEED
                     <GiPlantSeed className="text-yellow-500 text-6xl mb-8" />
-                  ) : averageScore >= 1.5 ? (                             // If average score ≥ 1.5 → show FLOWER         
+                  ) : averageScore >= 1.2 ? (                             // If average score ≥ 1.5 → show FLOWER         
                     <GiFlowers className="text-purple-500 text-6xl mb-8" />
                   ) : (                                                           //Otherwise → show GROWING PLANT
                     <FaSeedling className="text-green-500 text-6xl mb-8" />
