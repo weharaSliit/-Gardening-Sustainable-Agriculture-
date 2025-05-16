@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Nav from "../MainComponents/Nav";
 import HarvestTimeline from "./HarvestTimeline"; // Import the timeline component
+import { motion } from "framer-motion";
 import { jwtDecode } from "jwt-decode";
 import GardenLogsAnalysis from "./GardenLogsAnalysis";
 
@@ -360,34 +361,42 @@ const GardenCalendar = () => {
           </div>
         )}
 
-        {/* Profile Section */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-green-800 mb-4">Profile</h1>
-          {error && <p className="text-red-600 text-center mb-4">{error}</p>}
-          {profile ? (
-            <div className="flex flex-col sm:flex-row items-center">
-              {/* Profile Picture and Name */}
-              <div className="flex flex-col items-center sm:items-start sm:w-1/3">
-                <h2 className="text-2xl font-bold text-green-800">
-                  {profile.name}
-                </h2>
-              </div>
-
-              {/* Profile Details */}
-              <div className="sm:w-2/3 mt-6 sm:mt-0 sm:ml-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-gray-700">
-                      <strong>User ID:</strong> {profile.id}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <p className="text-center text-gray-600">Loading profile...</p>
-          )}
-        </div>
+        {/* Header with Graphic Image */}
+        <div className="relative bg-green-50 min-h-screen p-6">
+        <motion.div
+          className="flex items-center mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div>
+            <h1 className="text-2xl font-bold text-green-800 mb-2">
+              Track Your Garden
+            </h1>
+            <p className="text-gray-600 mb-4">
+              Plant your garden log and start growing 
+              garden!
+            </p>
+            <motion.button
+              //onClick={handleButtonClick}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Start Growing
+              <span className="ml-2">🌱</span>
+            </motion.button>
+          </div>
+          {/* Graphic Image */}
+          <div>
+            <img
+              src="public/gardenlogheader.png" // Replace with the actual path to your image
+              alt="Plant Icon"
+              className="w-200 h-100"
+            />
+          </div>
+        </motion.div>
+        
 
         {/* Garden Calendar Section */}
         <h1 className="text-2xl font-bold text-green-800 mb-4">
@@ -585,62 +594,66 @@ const GardenCalendar = () => {
 
                 <label className="text-green-800">Sow Date</label>
                 <div>
-                <input
-                  type="date"
-                  name="sowDate"
-                  placeholder="Sow Date"
-                  value={newEntry.sowDate}
-                  onChange={handleInputChange}
-                  className="border border-green-300 p-2 rounded"
-                />
-                {formErrors.sowDate && (
-      <p className="text-red-600 text-sm">{formErrors.sowDate}</p>
-    )}
+                  <input
+                    type="date"
+                    name="sowDate"
+                    placeholder="Sow Date"
+                    value={newEntry.sowDate}
+                    onChange={handleInputChange}
+                    className="border border-green-300 p-2 rounded"
+                  />
+                  {formErrors.sowDate && (
+                    <p className="text-red-600 text-sm">{formErrors.sowDate}</p>
+                  )}
                 </div>
 
                 <label className="text-green-800">Plant</label>
                 <div>
-                <input
-                  type="date"
-                  name="plantDate"
-                  placeholder="Plant Date"
-                  value={newEntry.plantDate}
-                  onChange={handleInputChange}
-                  className="border border-green-300 p-2 rounded"
-                />
-                {formErrors.plantDate && (
-      <p className="text-red-600 text-sm">{formErrors.plantDate}</p>
-    )}
+                  <input
+                    type="date"
+                    name="plantDate"
+                    placeholder="Plant Date"
+                    value={newEntry.plantDate}
+                    onChange={handleInputChange}
+                    className="border border-green-300 p-2 rounded"
+                  />
+                  {formErrors.plantDate && (
+                    <p className="text-red-600 text-sm">
+                      {formErrors.plantDate}
+                    </p>
+                  )}
                 </div>
 
                 <label className="text-green-800">Harvest(Start Date)</label>
                 <div>
-                <input
-                  type="date"
-                  name="startDate"
-                  placeholder="Start Date"
-                  value={newEntry.startDate}
-                  onChange={handleInputChange}
-                  className="border border-green-300 p-2 rounded"
-                />
-                {formErrors.startDate && (
-      <p className="text-red-600 text-sm">{formErrors.startDate}</p>
-    )}
+                  <input
+                    type="date"
+                    name="startDate"
+                    placeholder="Start Date"
+                    value={newEntry.startDate}
+                    onChange={handleInputChange}
+                    className="border border-green-300 p-2 rounded"
+                  />
+                  {formErrors.startDate && (
+                    <p className="text-red-600 text-sm">
+                      {formErrors.startDate}
+                    </p>
+                  )}
                 </div>
 
                 <label className="text-green-800">Harvest(End Date)</label>
                 <div>
-                <input
-                  type="date"
-                  name="endDate"
-                  placeholder="End Date"
-                  value={newEntry.endDate}
-                  onChange={handleInputChange}
-                  className="border border-green-300 p-2 rounded"
-                />
-                {formErrors.endDate && (
-      <p className="text-red-600 text-sm">{formErrors.endDate}</p>
-    )}
+                  <input
+                    type="date"
+                    name="endDate"
+                    placeholder="End Date"
+                    value={newEntry.endDate}
+                    onChange={handleInputChange}
+                    className="border border-green-300 p-2 rounded"
+                  />
+                  {formErrors.endDate && (
+                    <p className="text-red-600 text-sm">{formErrors.endDate}</p>
+                  )}
                 </div>
 
                 <label className="text-green-800">Quantity</label>
@@ -694,6 +707,7 @@ const GardenCalendar = () => {
         )}
       </div>
     </div>
+      </div>
   );
 };
 
