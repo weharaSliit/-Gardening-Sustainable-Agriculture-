@@ -25,7 +25,7 @@ const GoogleLoginButton = () => {
             localStorage.setItem("user", JSON.stringify(response.data.user));
 
             // Redirect to the profile page or dashboard
-            navigate("/garden-calendar");
+            navigate("/");
         } catch (error) {
             console.error("Google login failed:", error.response?.data || error.message);
             alert("Google login failed. Please try again.");
