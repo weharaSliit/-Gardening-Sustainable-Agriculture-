@@ -7,45 +7,48 @@ const GardenLogsAnalysis = ({ calendarData }) => {
   const [categoryYearlyData, setCategoryYearlyData] = useState({});
 
   useEffect(() => {
-    // Process data for category-wise monthly and yearly analysis
-    const processAnalysisData = () => {
+    const processMonthlyAndYearlyData = () => {
       const monthly = {};
       const yearly = {};
-
+  
       calendarData.forEach((entry) => {
-        const startDate = new Date(entry.startDate);
-        const month = startDate.getMonth(); // 0-11
-        const year = startDate.getFullYear();
+        const date = new Date(entry.startDate);
+        const month = date.getMonth(); // 0-11
+        const year = date.getFullYear();
         const category = entry.category || "Uncategorized";
-
-        // Convert quantity to grams if it's in kilograms
-        const quantityInGrams = entry.unit === "kg" ? entry.quantity * 1000 : entry.quantity;
-
+  
         // Initialize category data if not already present
         if (!monthly[category]) {
-          monthly[category] = Array(12).fill(0);
+          monthly[category] = Array(12).fill(0); // Initialize with 12 months
         }
         if (!yearly[category]) {
           yearly[category] = {};
         }
-
-        // Add data to the respective category
-        monthly[category][month] += quantityInGrams;
-        yearly[category][year] = (yearly[category][year] || 0) + quantityInGrams;
+  
+        // Add quantity to the respective month and category
+        monthly[category][month] += entry.quantity;
+  
+        // Add quantity to the respective year and category
+        yearly[category][year] = (yearly[category][year] || 0) + entry.quantity;
       });
-
+  
       setCategoryMonthlyData(monthly);
-      setCategoryYearlyData(
-        Object.fromEntries(
-          Object.entries(yearly).map(([category, data]) => [
-            category,
-            Object.entries(data).map(([year, quantity]) => ({ year, quantity })),
-          ])
-        )
+  
+      // Convert yearly data into a format suitable for charting
+      const formattedYearlyData = Object.fromEntries(
+        Object.entries(yearly).map(([category, data]) => [
+          category,
+          Object.keys(data).map((year) => ({
+            year: parseInt(year, 10),
+            quantity: data[year],
+          })),
+        ])
       );
+  
+      setCategoryYearlyData(formattedYearlyData);
     };
-
-    processAnalysisData();
+  
+    processMonthlyAndYearlyData();
   }, [calendarData]);
 
   const generateCategoryDatasets = (data, labels) => {
@@ -59,7 +62,10 @@ const GardenLogsAnalysis = ({ calendarData }) => {
 
     return Object.entries(data).map(([category, values], index) => ({
       label: `${category} Contribution (grams)`,
-      data: labels.map((_, i) => values[i] || 0),
+      data: labels.map((label) => {
+        const entry = values.find((v) => v.year === label);
+        return entry ? entry.quantity : 0;
+      }),
       fill: false,
       borderColor: colors[index % colors.length],
       backgroundColor: colors[index % colors.length],
@@ -67,26 +73,31 @@ const GardenLogsAnalysis = ({ calendarData }) => {
     }));
   };
 
+  // Generate labels for yearly chart
+  const yearlyLabels = Object.keys(categoryYearlyData).length
+    ? [...new Set(Object.values(categoryYearlyData).flat().map((data) => data.year))]
+    : [];
+
+  // Generate datasets for yearly chart
+  const yearlyDatasets = generateCategoryDatasets(categoryYearlyData, yearlyLabels);
+
   const monthlyChartData = {
     labels: [
       "January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December",
     ],
-    datasets: generateCategoryDatasets(categoryMonthlyData, Array(12).fill(0)),
-  };
-
-  const yearlyChartData = {
-    labels: Object.keys(categoryYearlyData).length
-      ? Object.values(categoryYearlyData)[0].map((data) => data.year)
-      : [],
-    datasets: Object.entries(categoryYearlyData).map(([category, data], index) => ({
-      label: `${category} Contribution (grams)`,
-      data: data.map((entry) => entry.quantity),
+    datasets: Object.entries(categoryMonthlyData).map(([category, data], index) => ({
+      label: `${category} Contribution`,
+      data: data, // Monthly data for the category
       fill: false,
       borderColor: `rgba(${index * 50}, ${index * 100}, ${index * 150}, 1)`,
       backgroundColor: `rgba(${index * 50}, ${index * 100}, ${index * 150}, 0.2)`,
       tension: 0.4,
     })),
+  };
+  const yearlyChartData = {
+    labels: yearlyLabels,
+    datasets: yearlyDatasets,
   };
 
   return (

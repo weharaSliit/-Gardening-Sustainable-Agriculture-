@@ -27,12 +27,14 @@ import UserChallengeHome from './components/Challenges/UserChallengeHome';
 
 //garden logs
 import GardenCalendar from './components/GardenLogs/GardenCalendar';
+import AdminGardenLogs from './components/GardenLogs/AdminGardenLogs';
 
 //tutorial
 import THome from './components/Tutorial/THome';
 import AddTutorial from './components/Tutorial/AddTutorial';
 import DisplayTutorial from './components/Tutorial/DisplayTutorial';
 import UpdateTutorial from './components/Tutorial/UpdateTutorial';
+import ExploreTutorial from './components/Tutorial/ExploreTutorial';  
 
 
 
@@ -67,6 +69,7 @@ const App = () => {
         />
         <Route path="/google-login" element={<GoogleLoginButton />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} /> 
+       
 
         
 
@@ -95,6 +98,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+          <Route path="/admin/admin-garden-logs" element={<AdminGardenLogs />} /> 
 
 
 
@@ -106,12 +110,19 @@ const App = () => {
 
 
          {/* Tutorial */}
+
+         {/* Tutorial - Admin Views */}
          <Route path="/thome" element={<THome />} />
          <Route path="/addtutorial" element={<AddTutorial/>} />
          <Route path="/alltutorial" element={<DisplayTutorial />} />
-       
-      <Route path="/tutorial/:id" element={<DisplayTutorial />} />
-      <Route path="/updatetutorial/:id" element={<UpdateTutorial />} />
+        <Route path="/tutorial/:id" element={<DisplayTutorial />} />
+        <Route path="/updatetutorial/:id" element={<UpdateTutorial />} />
+        {/* Explore Tutorials - Public Views */}
+        <Route path="/explore-tutorials" element={<ExploreTutorial />} />
+        <Route path="/explore-tutorial/:id" element={<ExploreTutorial />} />
+        <Route path="/explore-tutorial/:id/progress" element={<ExploreTutorial />} />
+        <Route path="/explore-tutorial/:id/certificate" element={<ExploreTutorial />} />
+
 
        
 

@@ -2,7 +2,6 @@
 
 import axios from 'axios';
 
-// Make sure backend is running at this URL
 export const API_BASE_URL = 'http://localhost:8080/api/v1';
 
 const axiosClient = axios.create({

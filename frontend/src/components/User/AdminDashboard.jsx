@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Nav from "../MainComponents/Nav";
 import { motion } from "framer-motion";
 import { FaChartLine, FaSeedling, FaBook, FaSignOutAlt, FaLeaf, FaBug } from "react-icons/fa";
+import Nav from "../MainComponents/Nav"; // Adjust the import path as necessary
+
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -91,6 +93,9 @@ const AdminDashboard = () => {
             <button
               onClick={() => navigate("/challenge-home")}
               className="mt-3 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-white py-2 px-4 rounded-lg shadow-md transition-all duration-300"
+              onClick={() => navigate("/admin/admin-garden-logs")}
+              className="mt-3 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
+
             >
               Go to Challenges
             </button>
