@@ -23,6 +23,7 @@ import TakeQuizPage from './components/Challenges/TakeQuizPage';
 import Leaderboard from './components/Challenges/Leaderboard';
 import AllPostedQuizzes from './components/Challenges/AllPostedQuizzes';
 import QuizStatistics from './components/Challenges/QuizStatistics';
+import UserChallengeHome from './components/Challenges/UserChallengeHome';
 
 //garden logs
 import GardenCalendar from './components/GardenLogs/GardenCalendar';
@@ -33,6 +34,8 @@ import THome from './components/Tutorial/THome';
 import AddTutorial from './components/Tutorial/AddTutorial';
 import DisplayTutorial from './components/Tutorial/DisplayTutorial';
 import UpdateTutorial from './components/Tutorial/UpdateTutorial';
+import ExploreTutorial from './components/Tutorial/ExploreTutorial';  
+
 
 
 
@@ -81,6 +84,7 @@ const App = () => {
          <Route path="/take-quiz/:id" element={<TakeQuizPage />} />
         <Route path="/leaderboard/:id" element={<Leaderboard />} />
         <Route path="/all-posted-quizzes" element={<AllPostedQuizzes />} />
+        <Route path="/user-challenge-home" element={<UserChallengeHome />} />
 
 
 
@@ -106,12 +110,19 @@ const App = () => {
 
 
          {/* Tutorial */}
+
+         {/* Tutorial - Admin Views */}
          <Route path="/thome" element={<THome />} />
          <Route path="/addtutorial" element={<AddTutorial/>} />
          <Route path="/alltutorial" element={<DisplayTutorial />} />
-       
-      <Route path="/tutorial/:id" element={<DisplayTutorial />} />
-      <Route path="/updatetutorial/:id" element={<UpdateTutorial />} />
+        <Route path="/tutorial/:id" element={<DisplayTutorial />} />
+        <Route path="/updatetutorial/:id" element={<UpdateTutorial />} />
+        {/* Explore Tutorials - Public Views */}
+        <Route path="/explore-tutorials" element={<ExploreTutorial />} />
+        <Route path="/explore-tutorial/:id" element={<ExploreTutorial />} />
+        <Route path="/explore-tutorial/:id/progress" element={<ExploreTutorial />} />
+        <Route path="/explore-tutorial/:id/certificate" element={<ExploreTutorial />} />
+
 
        
 
