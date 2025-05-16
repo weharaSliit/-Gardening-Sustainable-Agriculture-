@@ -9,4 +9,6 @@ public interface ChallengeRepository extends MongoRepository<ChallengeEntity, St
 
 
     List<ChallengeEntity> findByIsPostedTrue();
+    List<ChallengeEntity> findAll();
+
 }

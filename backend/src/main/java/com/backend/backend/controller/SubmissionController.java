@@ -5,6 +5,7 @@ import com.backend.backend.entity.Submission;
 import com.backend.backend.entity.SubmissionRequest;
 import com.backend.backend.repository.ChallengeRepository;
 import com.backend.backend.repository.SubmissionRepository;
+import com.backend.backend.service.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,19 @@ public class SubmissionController {
     @Autowired
     private ChallengeRepository challengeRepository;
 
+    @Autowired
+    private JWTService jwtService; //  Inject JWTService
+
     @PostMapping("/submit")
-    public ResponseEntity<String> submitQuiz(@RequestBody SubmissionRequest request) {
+    public ResponseEntity<String> submitQuiz(@RequestBody SubmissionRequest request, @RequestHeader("Authorization") String token) {
+
+
+        // Extract userId from JWT token
+        String userId = (String) jwtService.getFieldFromToken(token.replace("Bearer ", ""), "userId");
+
+
+
+
         ChallengeEntity quiz = challengeRepository.findById(request.getChallengeId()).orElse(null);
         if (quiz == null) return ResponseEntity.badRequest().body("Invalid quiz ID");
 
@@ -35,6 +47,7 @@ public class SubmissionController {
 
         Submission sub = new Submission();
         sub.setChallengeId(request.getChallengeId());
+        sub.setUserId(userId);
         sub.setName(request.getName());
         sub.setEmail(request.getEmail());
         sub.setScore(score);
@@ -52,4 +65,10 @@ public class SubmissionController {
     public List<Submission> getAllSubmissions() {
         return submissionRepo.findAll();
     }
+
+    @GetMapping("/user/{userId}")
+    public List<Submission> getSubmissionsByUser(@PathVariable String userId) {
+        return submissionRepo.findByUserId(userId);
+    }
+
 }

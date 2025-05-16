@@ -1,11 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-
+//user components
 import Register from './components/User/Register';
 import LoginPage from './components/User/LoginPage';
-import ProfilePage from './components/User/ProfilePage';
-import ProtectedRoute from './components/ProtectedRoute';   
+import ProfilePage from './components/User/UserProfile';
+import ProtectedRoute from './components/ProtectedRoute';  
+import GoogleLoginButton from './components/User/GoogleLoginButton'; 
+import AdminDashboard from './components/User/AdminDashboard';
 
 //main components
 import Home from './components/MainComponents/Home';
@@ -21,8 +23,7 @@ import TakeQuizPage from './components/Challenges/TakeQuizPage';
 import Leaderboard from './components/Challenges/Leaderboard';
 import AllPostedQuizzes from './components/Challenges/AllPostedQuizzes';
 import QuizStatistics from './components/Challenges/QuizStatistics';
-
-
+import UserChallengeHome from './components/Challenges/UserChallengeHome';
 
 //garden logs
 import GardenCalendar from './components/GardenLogs/GardenCalendar';
@@ -33,6 +34,7 @@ import AddTutorial from './components/Tutorial/AddTutorial';
 import DisplayTutorial from './components/Tutorial/DisplayTutorial';
 import UpdateTutorial from './components/Tutorial/UpdateTutorial';
 import ExploreTutorial from './components/Tutorial/ExploreTutorial';  
+
 
 
 
@@ -54,7 +56,6 @@ const App = () => {
      
 
        {/* User Registation and Login */}
-
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<LoginPage />} />
         <Route
@@ -65,6 +66,9 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/google-login" element={<GoogleLoginButton />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} /> 
+
         
 
          {/* Challenge */}
@@ -78,6 +82,7 @@ const App = () => {
          <Route path="/take-quiz/:id" element={<TakeQuizPage />} />
         <Route path="/leaderboard/:id" element={<Leaderboard />} />
         <Route path="/all-posted-quizzes" element={<AllPostedQuizzes />} />
+        <Route path="/user-challenge-home" element={<UserChallengeHome />} />
 
 
 

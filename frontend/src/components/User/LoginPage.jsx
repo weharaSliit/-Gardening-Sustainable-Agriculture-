@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaUser, FaLock } from "react-icons/fa";
 import { login } from "../../api/api";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -21,7 +22,13 @@ const LoginPage = () => {
         setError(response.data.error);
       } else {
         localStorage.setItem("token", response.data.token);
-        navigate("/garden-calendar");
+
+        // Navigate based on username and password
+        if (formData.username === "admin" && formData.password === "admin123") {
+          navigate("/admin-dashboard");
+        } else {
+          navigate("/garden-calendar");
+        }
       }
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");
@@ -94,6 +101,7 @@ const LoginPage = () => {
             >
               Login
             </motion.button>
+            <GoogleLoginButton />
           </form>
 
           {/* Navigation to Register */}

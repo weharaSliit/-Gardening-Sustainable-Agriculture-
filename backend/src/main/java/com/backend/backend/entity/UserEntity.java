@@ -20,6 +20,9 @@ public class UserEntity {
     @DBRef
     private ProfileEntity profile;
 
+    public UserEntity() {
+    }
+
     public UserEntity(String name, String email, String username, String password) {
         this.name = name;
         this.email = email;
