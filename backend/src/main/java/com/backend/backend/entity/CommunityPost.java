@@ -1,13 +1,12 @@
 package com.backend.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Document(collection = "community_post")
 public class CommunityPost {
@@ -18,19 +17,25 @@ public class CommunityPost {
     private String title;
     private String content;
     private String imageUrl;
-    private boolean verifiedPoster;
-    private Map<String, Set<String>> reactions;
+    //private boolean verifiedPoster;
+    private Map<String, Set<String>> reactions = new HashMap<>();
     private LocalDateTime createdAt;
     private boolean isDeleted = false;
+    private int shareCount; //new - for likes, posts, shares 5/6/2025
 
-    //private Map<String, Set<String>> reactions = new HashMap<>();
-    //like, clap, heart reactions etc.
 
     @DBRef
     private UserEntity user;
 
+    @DBRef
+    @JsonIgnoreProperties({"post"})
+    private List<Comment> comments = new ArrayList<>();
+
     public CommunityPost(){
+
         this.createdAt = LocalDateTime.now();
+        //this.comments = new ArrayList<>();
+        this.reactions = new HashMap<>();
     }
 
     //Getters and Setters
@@ -49,8 +54,8 @@ public class CommunityPost {
     public String getImageUrl() {return imageUrl;}
     public void setImageUrl(String imageUrl){this.imageUrl = imageUrl;}
 
-    public boolean getVerifiedPoster() { return verifiedPoster; }
-    public void setVerifiedPoster(boolean verifiedPoster) { this.verifiedPoster = verifiedPoster; }
+    //public boolean getVerifiedPoster() { return verifiedPoster; }
+    //public void setVerifiedPoster(boolean verifiedPoster) { this.verifiedPoster = verifiedPoster; }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -65,12 +70,17 @@ public class CommunityPost {
 
     public UserEntity getUser() {return user;}
 
-    public void setUser(UserEntity user){this.user = user;}
-
-    public boolean isVerifiedPoster(){
-        return user != null && user.getProfile() != null && Boolean.TRUE.equals(user.getProfile().getStatus());
+    public void setUser(UserEntity user){
+        this.user = user;
     }
+    public boolean isVerifiedPoster(){
+       return user != null && user.getProfile() != null && Boolean.TRUE.equals(user.getProfile().getStatus());
+    }
+    //new - for likes, posts, shares 5/6/2025
+    public int getShareCount() { return shareCount; }
+    public void setShareCount(int shareCount) {this.shareCount = shareCount;}
 
-
-
+    //new for comments
+    public List<Comment> getComments(){ return comments; }
+    public void setComments(List<Comment> comments) {this.comments = comments;}
 }

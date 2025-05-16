@@ -22,7 +22,14 @@ import TakeQuizPage from './components/Challenges/TakeQuizPage';
 import Leaderboard from './components/Challenges/Leaderboard';
 import AllPostedQuizzes from './components/Challenges/AllPostedQuizzes';
 
-
+//Community
+import CommunityHome from './components/Community/CommunityHome';
+import AddPost from './components/Community/AddPost';
+import CommentSection from './components/Community/CommentSection';
+import EditPost from './components/Community/EditPost';
+import UserPosts from './components/Community/UserPosts';
+import VerifiedPosts from './components/Community/VerifiedPosts';
+import PostDetails from './components/Community/PostDetails';
 
 //garden logs
 import GardenCalendar from './components/GardenLogs/GardenCalendar';
@@ -91,6 +98,14 @@ const App = () => {
 
 
          {/* Community */}
+         <Route path="/community" element={<CommunityHome />} />
+         <Route path="/add-post" element={<AddPost />} />  
+         <Route path="/edit-post/:postId" element={<EditPost />} />
+         <Route path="/user/:userId" element={<UserPosts />} /> 
+         <Route path="/verified" element={<VerifiedPosts />} />
+         <Route path="/community/posts/:postId/comments" element={<CommentSection />} />
+         <Route path="/post/:id" element={<PostDetails />} />
+         {/* <Route path="*" element={<NotFound />} />*/}
 
 
 

@@ -1,6 +1,7 @@
 package com.backend.backend.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +14,11 @@ public class CommunityPostResponseDTO {
     private boolean verifiedPoster;
     private Map<String, Set<String>> reactions;
     private LocalDateTime createdAt;
+    private int shareCount;
+    private List<String> comments;
+    //new
+    private Map<String, Integer> reactionCounts;
+    private int commentCount;
 
 public CommunityPostResponseDTO(){}
 
@@ -25,7 +31,9 @@ public CommunityPostResponseDTO(
     boolean verifiedPoster,
     LocalDateTime createdAt,
     //boolean isDeleted,
-    Map<String, Set<String>> reactions
+    Map<String, Set<String>> reactions,
+    int shareCount,
+    List<String> comments
 ) {
     this.id = id;
         this.userId = userId;
@@ -35,6 +43,8 @@ public CommunityPostResponseDTO(
         this.verifiedPoster = verifiedPoster;
         this.reactions = reactions;
         this.createdAt = createdAt;
+        this.shareCount = shareCount;
+        this.comments = comments;
     }
 
     //getters and setters
@@ -101,4 +111,15 @@ public CommunityPostResponseDTO(
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public int getShareCount(){
+        return shareCount;
+    }
+
+    public void setShareCount(int shareCount){
+        this.shareCount = shareCount;
+    }
+
+    public List<String> getComments() { return comments; }
+    public void setComments(List<String> comments) { this.comments = comments; }
 }
