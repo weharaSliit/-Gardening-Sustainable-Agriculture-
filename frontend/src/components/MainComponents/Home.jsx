@@ -82,7 +82,7 @@ const Home = () => {
               Join Our Garden
             </Link>
             <Link 
-              to="/alltutorial" 
+              to="/explore-tutorials" 
               className="px-8 py-4 bg-white text-green-700 border-2 border-green-200 rounded-full font-bold text-lg shadow-lg hover:shadow-xl hover:bg-green-50 transition-all duration-300 flex items-center justify-center gap-2"
             >
               <Leaf className="w-6 h-6" />

@@ -43,6 +43,9 @@ public class SecurityConfig {
                        r.anyRequest().permitAll()
 
                )
+               .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("/api/v1/auth/google-success", true)
+                )
                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                .authenticationProvider(authenticationProvider())
                .httpBasic(Customizer.withDefaults())

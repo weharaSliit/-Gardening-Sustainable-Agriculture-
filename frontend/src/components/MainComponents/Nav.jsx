@@ -1,5 +1,5 @@
 import React from "react";
-import { Leaf, Sprout, Users, BookOpen, Mail, Info, Bell } from "lucide-react";
+import { Leaf, Sprout, Users, BookOpen, Mail, Info, Bell, User } from "lucide-react";
 
 const Nav = ({ notifications = [], onNotificationClick }) => {
   const isLoggedIn = !!localStorage.getItem("token");
@@ -47,7 +47,7 @@ const Nav = ({ notifications = [], onNotificationClick }) => {
             </li>
             <li>
               <a 
-                href="/challenge-home" 
+                href="/user-challenge-home" 
                 className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-white/10 transition-all group hover:shadow-lg hover:shadow-emerald-500/10"
               >
                 <Sprout className="w-5 h-5 text-emerald-100 group-hover:text-white" />
@@ -105,6 +105,15 @@ const Nav = ({ notifications = [], onNotificationClick }) => {
                     </span>
                   )}
                 </button>
+
+                {/* Profile Icon */}
+            <a
+              href="/profile"
+              className="p-2 rounded-full hover:bg-green-700 transition-colors"
+              title="View Profile"
+            >
+              <User className="w-6 h-6 text-white" />
+            </a>  
                 
                 {/* Logout Button  */}
                 <button
