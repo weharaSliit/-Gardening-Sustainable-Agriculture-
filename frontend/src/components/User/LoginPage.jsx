@@ -27,7 +27,7 @@ const LoginPage = () => {
         if (formData.username === "admin" && formData.password === "admin123") {
           navigate("/admin-dashboard");
         } else {
-          navigate("/garden-calendar");
+          navigate("/");
         }
       }
     } catch (err) {

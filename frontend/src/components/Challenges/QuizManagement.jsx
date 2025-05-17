@@ -154,7 +154,7 @@ const QuizManagement = () => {
           </Link>
         </div>
 
-        {/* Search and Filter Bar */}
+        {/* Search Bar */}
         <div className="mb-6 flex flex-col md:flex-row gap-4">
           <div className="relative flex-grow">
             <Search className="absolute left-3 top-3 text-gray-400" />

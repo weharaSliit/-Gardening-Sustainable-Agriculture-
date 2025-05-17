@@ -108,7 +108,7 @@ const Nav = ({ notifications = [], onNotificationClick }) => {
 
                 {/* Profile Icon */}
             <a
-              href="/profile"
+              href="/garden-calendar"
               className="p-2 rounded-full hover:bg-green-700 transition-colors"
               title="View Profile"
             >

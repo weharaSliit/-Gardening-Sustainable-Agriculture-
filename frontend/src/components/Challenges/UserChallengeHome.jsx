@@ -83,7 +83,7 @@ const UserChallengeHome = () => {
     ? Math.max(...submissions.map(sub => sub.score))
     : 0;
 
-  // Function to get a plant icon based on score
+  // Function  plant icon based on score
   const getPlantIcon = (score) => {
     if (score >= 3) return <GiFlowers className="text-purple-500 text-2xl" />;
     if (score <= 3) return <FaLeaf className="text-green-500 text-2xl" />;
@@ -154,7 +154,7 @@ const UserChallengeHome = () => {
           animate="show"
           variants={containerVariants}
         >
-          {/* Interactive Plant Garden Box */}
+          
           <motion.div 
             className="relative bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg overflow-hidden border border-green-100 mb-10"
             variants={itemVariants}
@@ -196,14 +196,14 @@ const UserChallengeHome = () => {
                 </motion.button>
               </motion.div>
 
-              {/* Interactive Plant Visualization */}
+              {/*  Plant Visualization */}
               <motion.div 
                 className="flex-1 flex flex-col items-center justify-center relative h-64"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
               >
-                {/* Water level indicator */}
+                {/* Water level  */}
                 <div className="absolute bottom-0 w-48 h-4 bg-gray-200 rounded-full overflow-hidden">
                   <motion.div 
                     className="h-full bg-blue-400"
@@ -229,14 +229,14 @@ const UserChallengeHome = () => {
                 >
                   {totalAttempts === 0 ? (                          // If no quizzes taken → show SEED
                     <GiPlantSeed className="text-yellow-500 text-6xl mb-8" />
-                  ) : averageScore >= 1.5 ? (                             // If average score ≥ 1.5 → show FLOWER         
+                  ) : averageScore >= 1.2 ? (                             // If average score ≥ 1.5 → show FLOWER         
                     <GiFlowers className="text-purple-500 text-6xl mb-8" />
                   ) : (                                                           //Otherwise → show GROWING PLANT
                     <FaSeedling className="text-green-500 text-6xl mb-8" />
                   )}
                 </motion.div>
                 
-                {/* Growth indicator */}
+                {/* Growth indicate */}
                 {totalAttempts > 0 && (
                   <motion.div 
                     className="absolute top-0 right-0 bg-green-100 text-green-800 px-3 py-1 rounded-full flex items-center text-sm"
@@ -258,7 +258,7 @@ const UserChallengeHome = () => {
             initial="hidden"
             animate="show"
           >
-            {/* Total Quizzes Card */}
+            {/* Total Quiz Card */}
             <motion.div 
               className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md p-6 border border-green-100"
               variants={itemVariants}
@@ -275,7 +275,7 @@ const UserChallengeHome = () => {
               </div>
             </motion.div>
 
-            {/* Total Attempts Card */}
+            {/* Total Attempt Card */}
             <motion.div 
               className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md p-6 border border-green-100"
               variants={itemVariants}
@@ -392,7 +392,7 @@ const UserChallengeHome = () => {
                     className="border-l-4 border-green-400 pl-5 py-3 relative"
                     variants={itemVariants}
                   >
-                    {/* Animated timeline dot */}
+                    {/* animated timeline dot */}
                     <motion.div 
                       className="absolute -left-2.5 top-5 w-5 h-5 bg-green-500 rounded-full border-4 border-white"
                       animate={{
@@ -516,7 +516,7 @@ const UserChallengeHome = () => {
           </motion.div>
         </motion.div>
 
-        {/* Floating water drops */}
+        {/*  water drops */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
           {[...Array(8)].map((_, i) => (
             <motion.div
