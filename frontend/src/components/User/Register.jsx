@@ -21,18 +21,33 @@ const Register = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.name.trim()) errors.name = "Name is required.";
+  
+    // Validate name
+    if (!formData.name.trim()) {
+      errors.name = "Name is required.";
+    } else if (/\d/.test(formData.name)) {
+      errors.name = "Name cannot contain numbers.";
+    }
+  
+    // Validate email
     if (!formData.email.trim()) {
       errors.email = "Email is required.";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.email = "Email is invalid.";
     }
-    if (!formData.username.trim()) errors.username = "Username is required.";
+  
+    // Validate username
+    if (!formData.username.trim()) {
+      errors.username = "Username is required.";
+    }
+  
+    // Validate password
     if (!formData.password.trim()) {
       errors.password = "Password is required.";
     } else if (formData.password.length < 6) {
       errors.password = "Password must be at least 6 characters.";
     }
+  
     return errors;
   };
 
