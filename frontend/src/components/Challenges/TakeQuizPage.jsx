@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import * as jwt_decode from 'jwt-decode';
 import { Leaf, CheckCircle, ChevronLeft, ChevronRight, Check, Circle, Sprout, Flower2 } from 'lucide-react';
 import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';  //toast import
 
 const TakeQuizPage = () => {
   const { id } = useParams();
