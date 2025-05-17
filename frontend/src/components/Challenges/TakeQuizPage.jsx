@@ -39,10 +39,17 @@ const TakeQuizPage = () => {
     const newErrors = { name: '', email: '' };
     let isValid = true;
 
-    if (!name.trim()) {
-      newErrors.name = 'Name is required.';
+   // Name validation
+  if (!name.trim()) {
+    newErrors.name = 'Name is required.';
+    isValid = false;
+  } else {
+    const nameRegex = /^[a-zA-Z\s'-]+$/;
+    if (!nameRegex.test(name.trim())) {
+      newErrors.name = 'Name can only contain letters.';
       isValid = false;
     }
+  }
 
     if (!email.trim()) {
       newErrors.email = 'Email is required.';
