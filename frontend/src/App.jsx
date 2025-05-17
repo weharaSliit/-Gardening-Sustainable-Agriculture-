@@ -28,6 +28,7 @@ import UserChallengeHome from './components/Challenges/UserChallengeHome';
 //garden logs
 import GardenCalendar from './components/GardenLogs/GardenCalendar';
 import AdminGardenLogs from './components/GardenLogs/AdminGardenLogs';
+import UserContributions from './components/GardenLogs/UserContribution';
 
 //tutorial
 import THome from './components/Tutorial/THome';
@@ -98,8 +99,9 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-          <Route path="/admin/admin-garden-logs" element={<AdminGardenLogs />} /> 
-
+        <Route path="/admin/admin-garden-logs" element={<AdminGardenLogs />} /> 
+        <Route path="/user-contributions" element={<UserContributions />} />
+        
 
 
          {/* Community */}

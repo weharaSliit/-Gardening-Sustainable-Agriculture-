@@ -71,7 +71,7 @@ const AdminDashboard = () => {
             <h3 className="text-xl font-bold mb-3 text-green-700">View Reports</h3>
             <p className="text-gray-600 mb-4">Analyze system performance and user activity trends.</p>
             <button
-              onClick={() => navigate("/admin/reports")}
+              onClick={() => navigate("/user-contributions")}
               className="mt-3 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white py-2 px-4 rounded-lg shadow-md transition-all duration-300"
             >
               View Reports

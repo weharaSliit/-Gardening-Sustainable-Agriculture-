@@ -12,14 +12,38 @@ const Register = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const [validationErrors, setValidationErrors] = useState({});
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.name.trim()) errors.name = "Name is required.";
+    if (!formData.email.trim()) {
+      errors.email = "Email is required.";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Email is invalid.";
+    }
+    if (!formData.username.trim()) errors.username = "Username is required.";
+    if (!formData.password.trim()) {
+      errors.password = "Password is required.";
+    } else if (formData.password.length < 6) {
+      errors.password = "Password must be at least 6 characters.";
+    }
+    return errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
+    setValidationErrors({});
     try {
       const response = await register(formData);
       if (response.data.error) {
@@ -72,6 +96,9 @@ const Register = () => {
                   className="w-full bg-transparent outline-none text-gray-800 placeholder:text-gray-600"
                 />
               </div>
+              {validationErrors.name && (
+                <p className="text-red-600 text-sm mt-1">{validationErrors.name}</p>
+              )}
             </div>
 
             {/* Email Input */}
@@ -87,6 +114,9 @@ const Register = () => {
                   className="w-full bg-transparent outline-none text-gray-800 placeholder:text-gray-600"
                 />
               </div>
+              {validationErrors.email && (
+                <p className="text-red-600 text-sm mt-1">{validationErrors.email}</p>
+              )}
             </div>
 
             {/* Username Input */}
@@ -102,6 +132,9 @@ const Register = () => {
                   className="w-full bg-transparent outline-none text-gray-800 placeholder:text-gray-600"
                 />
               </div>
+              {validationErrors.username && (
+                <p className="text-red-600 text-sm mt-1">{validationErrors.username}</p>
+              )}
             </div>
 
             {/* Password Input */}
@@ -117,6 +150,9 @@ const Register = () => {
                   className="w-full bg-transparent outline-none text-gray-800 placeholder:text-gray-600"
                 />
               </div>
+              {validationErrors.password && (
+                <p className="text-red-600 text-sm mt-1">{validationErrors.password}</p>
+              )}
             </div>
 
             {/* Submit Button */}
