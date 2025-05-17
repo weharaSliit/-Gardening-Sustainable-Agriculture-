@@ -7,7 +7,6 @@ import { jwtDecode } from "jwt-decode";
 import GardenLogsAnalysis from "./GardenLogsAnalysis";
 import { useNavigate } from "react-router-dom"; // Add this import\
 
-
 const GardenCalendar = () => {
   const [calendarData, setCalendarData] = useState([]);
   const [notifications, setNotifications] = useState([]); // State for notifications
@@ -32,7 +31,8 @@ const GardenCalendar = () => {
   const [categories, setCategories] = useState([]);
   const [formErrors, setFormErrors] = useState({});
   const navigate = useNavigate();
-  
+  const [motivationalMessage, setMotivationalMessage] = useState(""); // State for motivational message
+  const targetQuantity = 100; // Fixed target value
 
   const markAsRead = (id) => {
     setNotifications((prevNotifications) =>
@@ -150,23 +150,60 @@ const GardenCalendar = () => {
       const nextDay = new Date(currentDate);
       nextDay.setDate(currentDate.getDate() + 1);
 
+      // Filter entries for notifications 24 hours before Harvest Start Date or End Date
       const nextDayNotifications = response.data.filter((entry) => {
         const harvestStartDate = new Date(entry.startDate);
+        const harvestEndDate = new Date(entry.endDate);
+
         return (
-          harvestStartDate.getFullYear() === nextDay.getFullYear() &&
-          harvestStartDate.getMonth() === nextDay.getMonth() &&
-          harvestStartDate.getDate() === nextDay.getDate()
+          (harvestStartDate.getFullYear() === nextDay.getFullYear() &&
+            harvestStartDate.getMonth() === nextDay.getMonth() &&
+            harvestStartDate.getDate() === nextDay.getDate()) ||
+          (harvestEndDate.getFullYear() === nextDay.getFullYear() &&
+            harvestEndDate.getMonth() === nextDay.getMonth() &&
+            harvestEndDate.getDate() === nextDay.getDate())
         );
       });
 
-      const formattedNotifications = nextDayNotifications.map((entry) => ({
-        id: entry.id,
-        message: `Reminder: Harvest ${
-          entry.vegetable
-        } starts tomorrow (${new Date(entry.startDate).toLocaleDateString()})`,
-      }));
+      // Format notifications for both Start Date and End Date
+      const formattedNotifications = nextDayNotifications.map((entry) => {
+        const notifications = [];
+        const harvestStartDate = new Date(entry.startDate);
+        const harvestEndDate = new Date(entry.endDate);
 
-      setNotifications(formattedNotifications);
+        if (
+          harvestStartDate.getFullYear() === nextDay.getFullYear() &&
+          harvestStartDate.getMonth() === nextDay.getMonth() &&
+          harvestStartDate.getDate() === nextDay.getDate()
+        ) {
+          notifications.push({
+            id: `${entry.id}-start`,
+            message: `Reminder: Harvest ${
+              entry.vegetable
+            } starts tomorrow (${harvestStartDate.toLocaleDateString()})`,
+          });
+        }
+
+        if (
+          harvestEndDate.getFullYear() === nextDay.getFullYear() &&
+          harvestEndDate.getMonth() === nextDay.getMonth() &&
+          harvestEndDate.getDate() === nextDay.getDate()
+        ) {
+          notifications.push({
+            id: `${entry.id}-end`,
+            message: `Reminder: Harvest ${
+              entry.vegetable
+            } ends tomorrow (${harvestEndDate.toLocaleDateString()})`,
+          });
+        }
+
+        return notifications;
+      });
+
+      // Flatten the array of notifications
+      const allNotifications = formattedNotifications.flat();
+
+      setNotifications(allNotifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
@@ -178,21 +215,53 @@ const GardenCalendar = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Prevent negative values for quantity
+    if (name === "quantity" && value < 0) {
+      setFormErrors((prevErrors) => ({
+        ...prevErrors,
+        quantity: "Quantity cannot be negative.",
+      }));
+      return;
+    }
+
     setNewEntry({ ...newEntry, [name]: value });
+
+    // Clear quantity error if valid
+    if (name === "quantity" && value >= 0) {
+      setFormErrors((prevErrors) => {
+        const { quantity, ...rest } = prevErrors;
+        return rest;
+      });
+    }
   };
 
-  const getHarvestingStatus = (startDate, endDate) => {
+  const getHarvestingStatus = (startDate, endDate, quantity) => {
     const currentDate = new Date();
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    if (currentDate > end) {
-      return "Done"; // Harvesting is completed
-    } else if (currentDate >= start && currentDate <= end) {
-      return "In Progress"; // Harvesting is ongoing
-    } else {
-      return "Upcoming"; // Harvesting has not started yet
+    // If quantity is added, mark as "Done"
+    if (quantity > 0) {
+      return "Done";
     }
+
+    // If both Harvest Start Date and End Date are overdue
+    if (currentDate > end && currentDate > start) {
+      return "Overdue";
+    }
+
+    // If Harvesting is ongoing
+    if (currentDate >= start && currentDate <= end) {
+      return "In Progress";
+    }
+
+    // If Harvesting has not started yet
+    if (currentDate < start) {
+      return "to be harvested";
+    }
+
+    return "Unknown"; // Default fallback status
   };
 
   const validateForm = () => {
@@ -205,14 +274,13 @@ const GardenCalendar = () => {
     if (!newEntry.startDate)
       errors.startDate = "Harvest Start Date is required.";
     if (!newEntry.endDate) errors.endDate = "Harvest End Date is required.";
-    if (!newEntry.quantity || newEntry.quantity <= 0)
-      errors.quantity = "Quantity must be greater than 0.";
 
     // Validate date order
     const sowDate = new Date(newEntry.sowDate);
     const plantDate = new Date(newEntry.plantDate);
     const startDate = new Date(newEntry.startDate);
     const endDate = new Date(newEntry.endDate);
+    const currentDate = new Date();
 
     if (plantDate < sowDate)
       errors.plantDate = "Plant Date must be after Sow Date.";
@@ -221,8 +289,13 @@ const GardenCalendar = () => {
     if (endDate < startDate)
       errors.endDate = "Harvest End Date must be after Harvest Start Date.";
 
+    // Validate quantity
+    if (newEntry.quantity && newEntry.quantity < 0) {
+      errors.quantity = "Quantity cannot be negative.";
+    }
+
     setFormErrors(errors);
-    return Object.keys(errors).length === 0; // Return true if no errors
+    return Object.keys(errors).length === 0;
   };
 
   const handleAddEntry = async () => {
@@ -257,7 +330,26 @@ const GardenCalendar = () => {
           }
         );
       }
-      fetchCalendarData(token, userId); // Fetch updated calendar data
+
+      // Fetch updated calendar data
+      await fetchCalendarData(token, userId);
+
+      // Calculate total quantity
+      const totalQuantity = calendarData.reduce(
+        (sum, entry) => sum + (entry.quantity || 0),
+        0
+      );
+
+      // Check if the target is exceeded
+      if (totalQuantity > targetQuantity) {
+        setMotivationalMessage(
+          `Congratulations! You've exceeded your target of ${targetQuantity} units! Keep up the great work! 🎉`
+        );
+      } else {
+        setMotivationalMessage(""); // Clear the message if the target is not exceeded
+      }
+
+      // Reset the form
       setNewEntry({
         vegetable: "",
         sowDate: "",
@@ -268,7 +360,7 @@ const GardenCalendar = () => {
         quantityScale: "kg",
         description: "",
       });
-      setIsModalOpen(false); // Close the modal after saving
+      setIsModalOpen(false);
     } catch (error) {
       console.error("Error saving entry:", error);
     }
@@ -329,7 +421,6 @@ const GardenCalendar = () => {
           onNotificationClick={onNotificationClick} // Pass the function as a prop
         />
       </div>
-      
 
       {/* Main Content */}
       <div className="pt-20 p-6 bg-green-50 min-h-screen">
@@ -369,39 +460,45 @@ const GardenCalendar = () => {
         {/* Header with Graphic Image */}
         <div className="relative bg-green-50 min-h-screen p-6">
           <motion.div
-            className="flex items-center mb-8"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            className="flex items-center justify-between bg-green-50 p-6 rounded-lg shadow-lg mb-8"
+            initial={{ opacity: 0, y: 50 }} // Initial animation state
+            animate={{ opacity: 1, y: 0 }} // Final animation state
+            transition={{ duration: 0.8, ease: "easeOut" }} // Animation duration and easing
           >
-            <div>
-              <h1 className="text-2xl font-bold text-green-800 mb-2">
+            {/* Gardener Text */}
+            <motion.div
+              className="text-left"
+              initial={{ opacity: 0, x: -50 }} // Text slides in from the left
+              animate={{ opacity: 1, x: 0 }} // Final position
+              transition={{ duration: 0.8, delay: 0.2 }} // Delay for staggered effect
+            >
+              <h2 className="text-2xl font-bold text-green-800 mb-2">
                 Track Your Garden
-              </h1>
-              <p className="text-gray-600 mb-4">
-                Plant your garden log and start growing garden!
+              </h2>
+              <p className="text-gray-600">
+                Keep your garden thriving with our easy-to-use calendar!
               </p>
               <motion.button
-                onClick={() => navigate("/watering-tracker")} // Navigate to Watering Tracker
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center"
+                onClick={() => navigate("/contact")}
+                className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
                 whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileTap={{ scale: 0.95 }} 
               >
-                Start Growing
-                <span className="ml-2">🌱</span>
+                Contact Us for More Assistance
               </motion.button>
-            </div>
-            {/* Graphic Image */}
-            <div>
-              <img
-                src="public/logheader.png" // Replace with the actual path to your image
-                alt="Plant Icon"
-                className="w-86 h-90"
-              />
-            </div>
-          </motion.div>
+            </motion.div>
 
-          
+            {/* Gardener Icon */}
+            <motion.div
+              className="flex items-center justify-center w-24 h-24 bg-green-200 rounded-full shadow-lg"
+              initial={{ opacity: 0, scale: 0.8 }} 
+              animate={{ opacity: 1, scale: 1 }} 
+              transition={{ duration: 0.8, delay: 0.4 }} 
+            >
+              <span className="text-green-800 text-4xl">🌱</span>{" "}
+              {/* Gardener Icon */}
+            </motion.div>
+          </motion.div>
 
           {/* Garden Calendar Section */}
           <h1 className="text-2xl font-bold text-green-800 mb-4">
@@ -433,6 +530,12 @@ const GardenCalendar = () => {
           >
             View Graphs
           </button>
+
+          {motivationalMessage && (
+            <div className="mb-6 bg-green-100 border border-green-300 text-green-800 p-4 rounded-lg shadow">
+              <p className="font-bold">{motivationalMessage}</p>
+            </div>
+          )}
 
           <table className="min-w-full bg-white border border-green-200 rounded-lg mb-6">
             <thead>
@@ -506,18 +609,26 @@ const GardenCalendar = () => {
                   <td className="p-4">
                     <span
                       className={`px-2 py-1 rounded ${
-                        getHarvestingStatus(entry.startDate, entry.endDate) ===
-                        "Done"
+                        getHarvestingStatus(
+                          entry.startDate,
+                          entry.endDate,
+                          entry.quantity
+                        ) === "Done"
                           ? "bg-green-100 text-green-800"
                           : getHarvestingStatus(
                               entry.startDate,
-                              entry.endDate
+                              entry.endDate,
+                              entry.quantity
                             ) === "In Progress"
                           ? "bg-yellow-100 text-yellow-800"
                           : "bg-red-100 text-red-800"
                       }`}
                     >
-                      {getHarvestingStatus(entry.startDate, entry.endDate)}
+                      {getHarvestingStatus(
+                        entry.startDate,
+                        entry.endDate,
+                        entry.quantity
+                      )}
                     </span>
                   </td>
                   <td className="p-4">
@@ -666,26 +777,33 @@ const GardenCalendar = () => {
                   </div>
 
                   <label className="text-green-800">Quantity</label>
-                  <div className="flex items-center">
-                    <input
-                      type="number"
-                      name="quantity"
-                      placeholder="Quantity"
-                      value={newEntry.quantity}
-                      onChange={handleInputChange}
-                      className="border border-green-300 p-2 rounded"
-                    />
-                    <select
-                      name="quantityScale"
-                      value={newEntry.quantityScale || "kg"}
-                      onChange={handleInputChange}
-                      className="ml-2 border border-green-300 p-2 rounded"
-                    >
-                      <option value="g">g</option>
-                      <option value="kg">kg</option>
-                      <option value="liters">liters</option>
-                      <option value="pounds">pounds</option>
-                    </select>
+                  <div>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        name="quantity"
+                        placeholder="Quantity"
+                        value={newEntry.quantity}
+                        onChange={handleInputChange}
+                        className="border border-green-300 p-2 rounded"
+                      />
+                      <select
+                        name="quantityScale"
+                        value={newEntry.quantityScale || "kg"}
+                        onChange={handleInputChange}
+                        className="ml-2 border border-green-300 p-2 rounded"
+                      >
+                        <option value="g">g</option>
+                        <option value="kg">kg</option>
+                        <option value="liters">liters</option>
+                        <option value="pounds">pounds</option>
+                      </select>
+                    </div>
+                    {formErrors.quantity && (
+                      <p className="text-red-600 text-sm">
+                        {formErrors.quantity}
+                      </p>
+                    )}
                   </div>
                   <label className="text-green-800">Description</label>
                   <input
