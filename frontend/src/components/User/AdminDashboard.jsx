@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaChartLine, FaSeedling, FaBook, FaSignOutAlt, FaLeaf, FaBug } from "react-icons/fa";
-import Nav from "../MainComponents/Nav"; // Adjust the import path as necessary
+import Nav from "../MainComponents/Nav"; 
 
 
 const AdminDashboard = () => {
@@ -36,7 +36,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-teal-50 flex flex-col">
-      {/* Navigation Bar */}
+      
       <Nav />
 
       {/* Main Content */}
@@ -92,7 +92,7 @@ const AdminDashboard = () => {
             <button
               onClick={() => navigate("/challenge-home")}
               className="mt-3 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-white py-2 px-4 rounded-lg shadow-md transition-all duration-300"
-              
+
             >
               Go to Challenges
             </button>
@@ -110,7 +110,7 @@ const AdminDashboard = () => {
             <h3 className="text-xl font-bold mb-3 text-blue-700">Tutorials</h3>
             <p className="text-gray-600 mb-4">Plant seeds of knowledge with educational content.</p>
             <button
-              onClick={() => navigate("/tutorial")}
+              onClick={() => navigate("/thome")}
               className="mt-3 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white py-2 px-4 rounded-lg shadow-md transition-all duration-300"
             >
               Manage Tutorials

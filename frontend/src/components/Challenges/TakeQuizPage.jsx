@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import * as jwt_decode from 'jwt-decode';
 import { Leaf, CheckCircle, ChevronLeft, ChevronRight, Check, Circle, Sprout, Flower2 } from 'lucide-react';
@@ -14,6 +13,7 @@ const TakeQuizPage = () => {
   const [email, setEmail] = useState('');
   const [userId, setUserId] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [errors, setErrors] = useState({ name: '', email: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const TakeQuizPage = () => {
     if (token) {
       try {
         const decoded = jwt_decode.jwtDecode(token);
-        setUserId(decoded.id); // assuming the payload has `id`
+        setUserId(decoded.id); 
       } catch (err) {
         console.error("Invalid token", err);
       }
@@ -35,8 +35,34 @@ const TakeQuizPage = () => {
       });
   }, [id]);
 
+  const validate = () => {
+    const newErrors = { name: '', email: '' };
+    let isValid = true;
+
+    if (!name.trim()) {
+      newErrors.name = 'Name is required.';
+      isValid = false;
+    }
+
+    if (!email.trim()) {
+      newErrors.email = 'Email is required.';
+      isValid = false;
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        newErrors.email = 'Enter a valid email address.';
+        isValid = false;
+      }
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleSubmit = () => {
-    const token = localStorage.getItem("token"); // Retrieve token here
+    if (!validate()) return;
+
+    const token = localStorage.getItem("token");
     if (!token) {
       toast.error("You must be logged in to submit the quiz.");
       return;
@@ -109,7 +135,6 @@ const TakeQuizPage = () => {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
       <ToastContainer />
 
-      {/* Background Design */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-teal-50 to-emerald-100 opacity-90"></div>
         <div className="absolute top-0 left-0 w-full h-full">
@@ -130,7 +155,6 @@ const TakeQuizPage = () => {
         </div>
       </div>
 
-      {/* Quiz Card */}
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden relative z-10 border border-green-100">
         <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 relative overflow-hidden">
           <div className="absolute top-2 right-2 opacity-10">
@@ -154,9 +178,7 @@ const TakeQuizPage = () => {
                   index <= currentQuestion 
                     ? answers[index] ? 'bg-green-300 w-6' : 'bg-green-200 w-4'
                     : 'bg-white/30 w-2'
-                } ${
-                  index === currentQuestion ? 'ring-2 ring-white' : ''
-                }`}
+                } ${index === currentQuestion ? 'ring-2 ring-white' : ''}`}
               />
             ))}
           </div>
@@ -173,6 +195,7 @@ const TakeQuizPage = () => {
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder-green-700/50 pl-10"
               />
               <Sprout className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-600" size={20} />
+              {errors.name && <p className="text-red-500 text-sm mt-1 ml-1">{errors.name}</p>}
             </div>
             <div className="relative">
               <input
@@ -183,6 +206,7 @@ const TakeQuizPage = () => {
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder-green-700/50 pl-10"
               />
               <Sprout className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-600" size={20} />
+              {errors.email && <p className="text-red-500 text-sm mt-1 ml-1">{errors.email}</p>}
             </div>
           </div>
 
@@ -225,7 +249,7 @@ const TakeQuizPage = () => {
             </div>
           </div>
 
-          {/* Navigation */}
+          {/* navigation */}
           <div className="flex justify-between border-t pt-4">
             <button
               onClick={handlePrev}
@@ -270,7 +294,7 @@ const TakeQuizPage = () => {
         </div>
       </div>
 
-      {/* Decorative Plants */}
+      {/* Decorate Plants */}
       <div className="fixed bottom-4 right-4 text-green-600 opacity-30 z-0">
         <Leaf size={120} />
       </div>
