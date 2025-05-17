@@ -17,7 +17,7 @@ const UserChallengeHome = () => {
   const [waterLevel, setWaterLevel] = useState(0);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');   //token is stored in local storage
     if (!token) return;
 
     const payload = JSON.parse(atob(token.split('.')[1]));
