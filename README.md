@@ -5,6 +5,12 @@
 
 Gardening & Sustainable Agriculture is a Spring Boot + React-based web application dedicated to promoting eco-friendly gardening and sustainable agriculture practices. The platform empowers users to plan, manage, and track their gardens while encouraging environmental stewardship and community collaboration.
 
+ ![Profile and Graden Logs Page Screenshot](./assets/home.png)
+
+ ![Profile and Graden Logs Page Screenshot](./assets/about.png)
+
+ ![Profile and Graden Logs Page Screenshot](./assets/contact.png)
+
 ✨ Key Features
 
 🌾 User Profiles & Garden Logs
@@ -18,7 +24,7 @@ Gardening & Sustainable Agriculture is a Spring Boot + React-based web applicati
              🌿 Personalized garden management.
 
     👤 Contributor: Hiruni
-
+![Profile and Graden Logs Page Screenshot](./assets/loginImage.png)
     
 
 📖 Gardening Tutorials
@@ -29,7 +35,10 @@ Gardening & Sustainable Agriculture is a Spring Boot + React-based web applicati
 
              🌍 Access a library of eco-friendly gardening techniques.
 
+             📜 Certificate Generation
+
     👩‍🏫 Contributor: Chathurika
+  ![Profile and Graden Logs Page Screenshot](./assets/tutorialImage.png)
 
 🗣️ Community Features
 
@@ -39,19 +48,20 @@ Gardening & Sustainable Agriculture is a Spring Boot + React-based web applicati
 
              👍 Like and 💬 comment on community discussions.
 
+             
     👥 Contributor: Tanuri
 
 🎖️ Growth Challenges, Badges & Leaderboard
 
              🏆 CRUD operations for challenges and achievements.
 
-             🏗️ Admins and users can create, update, and delete challenges.
+             🧩 Admins can publish quizzes; only published challenges are visible to users.
 
-             🎯 Users can participate in challenges and earn badges.
+             🎯 Users can participate in challenges to earn badges and track progress.
 
-             👀 Both users and admins can view challenges and achievements.
+             📈 JWT-based Personalized Timeline shows each user’s completed challenges and scores.
 
-             Timeline
+             🥇 Leaderboard System displays top-performing users based on scores.
 
              📊 Leaderboard System 
 
@@ -60,6 +70,7 @@ Gardening & Sustainable Agriculture is a Spring Boot + React-based web applicati
                  📢 Display rankings and encourage friendly competition among users.
 
     🥇 Contributor: Wehara
+  ![Profile and Graden Logs Page Screenshot](./assets/quizImage.png)
 
 
 💻 Tech Stack
