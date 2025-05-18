@@ -7,9 +7,9 @@ Gardening & Sustainable Agriculture is a Spring Boot + React-based web applicati
 
  ![Home](frontend/src/assets/about.png)
 
- ![Profile and Graden Logs Page Screenshot](./assets/about.png)
+ ![Profile and Graden Logs Page Screenshot](frontend/src/assets/about.png)
 
- ![Profile and Graden Logs Page Screenshot](./assets/contact.png)
+ ![Profile and Graden Logs Page Screenshot](frontend/src/assets/contact.png)
 
 ✨ Key Features
 
@@ -24,7 +24,7 @@ Gardening & Sustainable Agriculture is a Spring Boot + React-based web applicati
              🌿 Personalized garden management.
 
     👤 Contributor: Hiruni
-![Profile and Graden Logs Page Screenshot](./assets/loginImage.png)
+![Profile and Graden Logs Page Screenshot](frontend/src/assets/loginImage.png)
     
 
 📖 Gardening Tutorials
@@ -38,7 +38,7 @@ Gardening & Sustainable Agriculture is a Spring Boot + React-based web applicati
              📜 Certificate Generation
 
     👩‍🏫 Contributor: Chathurika
-  ![Profile and Graden Logs Page Screenshot](./assets/tutorialImage.png)
+  ![Profile and Graden Logs Page Screenshot](frontend/src/assets/tutorialImage.png)
 
 🗣️ Community Features
 
@@ -70,7 +70,7 @@ Gardening & Sustainable Agriculture is a Spring Boot + React-based web applicati
                  📢 Display rankings and encourage friendly competition among users.
 
     🥇 Contributor: Wehara
-  ![Profile and Graden Logs Page Screenshot](./assets/quizImage.png)
+  ![Profile and Graden Logs Page Screenshot](frontend/src/assets/quizImage.png)
 
 
 💻 Tech Stack
