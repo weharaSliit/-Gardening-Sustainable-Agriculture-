@@ -3,21 +3,23 @@
 
 🌍 Overview
 
-Gardening & Sustainable Agriculture is a 🌿 Spring-based web application designed to promote eco-friendly gardening and sustainable agriculture practices. The platform provides users with essential tools to plan, manage, and optimize their gardens while encouraging resource efficiency and community engagement. 🌎🌾
+Gardening & Sustainable Agriculture is a Spring Boot + React-based web application dedicated to promoting eco-friendly gardening and sustainable agriculture practices. The platform empowers users to plan, manage, and track their gardens while encouraging environmental stewardship and community collaboration.
 
-✨ Features
+✨ Key Features
 
 🌾 User Profiles & Garden Logs
 
-             📝 CRUD operations for user profiles.
+              📝 Full CRUD operations for user profiles.
 
-             🆕 Users can create, update, and delete their profiles.
+             🌿 Personalized garden tracking and log management.
 
-             📊 Track progress and gardening activities.
+             📊 Users can track gardening activities and progress.
 
              🌿 Personalized garden management.
 
     👤 Contributor: Hiruni
+
+    
 
 📖 Gardening Tutorials
 
