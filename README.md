@@ -3,21 +3,29 @@
 
 🌍 Overview
 
-Gardening & Sustainable Agriculture is a 🌿 Spring-based web application designed to promote eco-friendly gardening and sustainable agriculture practices. The platform provides users with essential tools to plan, manage, and optimize their gardens while encouraging resource efficiency and community engagement. 🌎🌾
+Gardening & Sustainable Agriculture is a Spring Boot + React-based web application dedicated to promoting eco-friendly gardening and sustainable agriculture practices. The platform empowers users to plan, manage, and track their gardens while encouraging environmental stewardship and community collaboration.
 
-✨ Features
+ ![Home](frontend/src/assets/home.png)
+
+ ![Profile and Graden Logs Page Screenshot](frontend/src/assets/about.png)
+
+ ![Profile and Graden Logs Page Screenshot](frontend/src/assets/contact.png)
+
+✨ Key Features
 
 🌾 User Profiles & Garden Logs
 
-             📝 CRUD operations for user profiles.
+              📝 Full CRUD operations for user profiles.
 
-             🆕 Users can create, update, and delete their profiles.
+             🌿 Personalized garden tracking and log management.
 
-             📊 Track progress and gardening activities.
+             📊 Users can track gardening activities and progress.
 
              🌿 Personalized garden management.
 
     👤 Contributor: Hiruni
+![Profile and Graden Logs Page Screenshot](frontend/src/assets/loginImage.png)
+    
 
 📖 Gardening Tutorials
 
@@ -27,7 +35,10 @@ Gardening & Sustainable Agriculture is a 🌿 Spring-based web application desig
 
              🌍 Access a library of eco-friendly gardening techniques.
 
+             📜 Certificate Generation
+
     👩‍🏫 Contributor: Chathurika
+  ![Profile and Graden Logs Page Screenshot](frontend/src/assets/tutorialImage.png)
 
 🗣️ Community Features
 
@@ -37,19 +48,20 @@ Gardening & Sustainable Agriculture is a 🌿 Spring-based web application desig
 
              👍 Like and 💬 comment on community discussions.
 
+             
     👥 Contributor: Tanuri
 
 🎖️ Growth Challenges, Badges & Leaderboard
 
              🏆 CRUD operations for challenges and achievements.
 
-             🏗️ Admins and users can create, update, and delete challenges.
+             🧩 Admins can publish quizzes; only published challenges are visible to users.
 
-             🎯 Users can participate in challenges and earn badges.
+             🎯 Users can participate in challenges to earn badges and track progress.
 
-             👀 Both users and admins can view challenges and achievements.
+             📈 JWT-based Personalized Timeline shows each user’s completed challenges and scores.
 
-             Timeline
+             🥇 Leaderboard System displays top-performing users based on scores.
 
              📊 Leaderboard System 
 
@@ -58,6 +70,7 @@ Gardening & Sustainable Agriculture is a 🌿 Spring-based web application desig
                  📢 Display rankings and encourage friendly competition among users.
 
     🥇 Contributor: Wehara
+  ![Profile and Graden Logs Page Screenshot](frontend/src/assets/quizImage.png)
 
 
 💻 Tech Stack

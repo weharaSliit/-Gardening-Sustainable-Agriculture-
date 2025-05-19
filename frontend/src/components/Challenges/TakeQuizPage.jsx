@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import * as jwt_decode from 'jwt-decode';
 import { Leaf, CheckCircle, ChevronLeft, ChevronRight, Check, Circle, Sprout, Flower2 } from 'lucide-react';
 import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';  //toast import
 
 const TakeQuizPage = () => {
   const { id } = useParams();
@@ -39,10 +39,17 @@ const TakeQuizPage = () => {
     const newErrors = { name: '', email: '' };
     let isValid = true;
 
-    if (!name.trim()) {
-      newErrors.name = 'Name is required.';
+   // Name validation
+  if (!name.trim()) {
+    newErrors.name = 'Name is required.';
+    isValid = false;
+  } else {
+    const nameRegex = /^[a-zA-Z\s'-]+$/;
+    if (!nameRegex.test(name.trim())) {
+      newErrors.name = 'Name can only contain letters.';
       isValid = false;
     }
+  }
 
     if (!email.trim()) {
       newErrors.email = 'Email is required.';
